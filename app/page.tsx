@@ -29,7 +29,7 @@ export default function Home() {
         'Generate answers based on your personal work history',
         'Feedback and performance insights',
       ],
-      link: 'ok',
+      link: 'oks',
     },
   ];
 

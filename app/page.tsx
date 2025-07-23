@@ -1,5 +1,6 @@
 import GridDistortion from '@/blocks/Backgrounds/GridDistortion/GridDistortion';
 import DistortionComponent from '@/components/DistortionComponent';
+import SignupButtonComponent from '@/components/SignupButtonComponent';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -60,6 +61,8 @@ export default function Home() {
           Make the job search process 10x easier with our suite of tools
           designed to help you land and ace your interviews.
         </h5>
+
+        <SignupButtonComponent />
       </div>
 
       <div className='mt-30 space-y-5 mx-auto flex flex-col items-center overflow-hidden'>

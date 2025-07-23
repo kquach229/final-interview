@@ -28,12 +28,12 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`max-w-[1300px] p-5 mx-auto ${geistSans.variable} ${geistMono.variable} antialiased flex`}>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger />
-          {children}
-        </SidebarProvider>
+        className={`max-w-[1300px] overflow-x-hidden p-5 mx-auto ${geistSans.variable} ${geistMono.variable} antialiased flex`}>
+        {/* <SidebarProvider>
+          <AppSidebar /> */}
+        {/* <SidebarTrigger /> */}
+        {children}
+        {/* </SidebarProvider> */}
       </body>
     </html>
   );

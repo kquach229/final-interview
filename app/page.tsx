@@ -1,3 +1,5 @@
+import GridDistortion from '@/blocks/Backgrounds/GridDistortion/GridDistortion';
+import DistortionComponent from '@/components/DistortionComponent';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -16,7 +18,6 @@ export default function Home() {
         'Chat naturally with AI',
         'Perfectly formatted resume',
         'Transform your resume to any job description',
-        'Unlimited ATS-optimized resume',
       ],
       link: '',
     },
@@ -27,7 +28,6 @@ export default function Home() {
         'Job-specific questions',
         'Generate answers based on your personal work history',
         'Feedback and performance insights',
-        'Unlimited mock interviews',
       ],
       link: '',
     },
@@ -48,7 +48,7 @@ export default function Home() {
     '+Many More',
   ];
   return (
-    <div className='w-full text-center'>
+    <div className='w-full text-center mt-10 mb-20'>
       <div className='space-y-5 mt-20'>
         <Badge variant='outline'>
           <BotIcon /> AI-Powered Interview Coach
@@ -62,9 +62,17 @@ export default function Home() {
         </h5>
       </div>
 
+      <div className='mt-20 space-y-5 mx-auto flex flex-col items-center overflow-hidden'>
+        <div className='text-3xl font-bold'>
+          Your AI Interview Coach - Ready to Lend a Helping Hand
+        </div>
+
+        <DistortionComponent src={'/helping_hand.jpg'} />
+      </div>
+
       <div className='flex flex-col gap-5 mt-20'>
         <h5 className='text-3xl font-bold'>Our Tools</h5>
-        <div className='flex justify-center gap-10'>
+        <div className='flex flex-col sm:flex-row justify-center gap-10'>
           {tools &&
             tools.map((tool) => (
               <Card key={tool.title}>
@@ -90,7 +98,9 @@ export default function Home() {
       </div>
 
       <div className='mt-20 space-y-5'>
-        <h3 className='text-3xl font-bold'>An Agent that Works for You</h3>
+        <h3 className='text-3xl font-bold'>
+          An Agent that Works for You - No Matter Your Job Title
+        </h3>
         <h5>
           Regardless of your industry, our interview agent will adapt to your
           needs

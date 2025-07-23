@@ -10,13 +10,13 @@ import Image from 'next/image';
 const AppSidebar = () => {
   return (
     <div>
-      <Sidebar>
+      <Sidebar className='w-[200px]'>
         <SidebarHeader>
           <Image
             src='/final_interview_logo.svg'
             alt='final interview logo'
-            height={300}
-            width={300}
+            height={400}
+            width={400}
           />
         </SidebarHeader>
         <SidebarContent></SidebarContent>

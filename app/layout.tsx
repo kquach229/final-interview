@@ -4,6 +4,7 @@ import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import AppSidebar from '@/components/Sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import SplashCursor from '@/blocks/Animations/SplashCursor/SplashCursor';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,12 +29,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`max-w-[1300px] overflow-x-hidden p-5 mx-auto ${geistSans.variable} ${geistMono.variable} antialiased flex`}>
-        {/* <SidebarProvider>
-          <AppSidebar /> */}
-        {/* <SidebarTrigger /> */}
-        {children}
-        {/* </SidebarProvider> */}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}>
+        <SplashCursor />
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarTrigger />
+          <div className='max-w-[1300px] p-5 overflow-hidden'>{children}</div>
+        </SidebarProvider>
       </body>
     </html>
   );

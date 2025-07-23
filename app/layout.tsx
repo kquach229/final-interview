@@ -38,12 +38,12 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}>
+          className={`w-full ${geistSans.variable} ${geistMono.variable} antialiased`}>
           <SplashCursor />
           <SidebarProvider>
             <AppSidebar />
             <SidebarTrigger />
-            <div className='max-w-[1300px] mx-auto p-5 overflow-hidden'>
+            <div className='mx-auto max-w-[1300px] p-5 w-full overflow-hidden'>
               {children}
             </div>
           </SidebarProvider>

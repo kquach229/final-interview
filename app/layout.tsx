@@ -43,7 +43,9 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <SidebarTrigger />
-            <div className='max-w-[1300px] p-5 overflow-hidden'>{children}</div>
+            <div className='max-w-[1300px] mx-auto p-5 overflow-hidden'>
+              {children}
+            </div>
           </SidebarProvider>
         </body>
       </html>

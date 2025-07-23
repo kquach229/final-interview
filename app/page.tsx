@@ -49,7 +49,7 @@ export default function Home() {
   ];
   return (
     <div className='w-full text-center mt-10 mb-20'>
-      <div className='space-y-5 mt-20'>
+      <div className='space-y-5 mt-30 min-h-[350px]'>
         <Badge variant='outline'>
           <BotIcon /> AI-Powered Interview Coach
         </Badge>
@@ -58,19 +58,24 @@ export default function Home() {
         </h3>
         <h5 className='text-primary'>
           Make the job search process 10x easier with our suite of tools
-          designed to help you land and ace your interviews
+          designed to help you land and ace your interviews.
         </h5>
       </div>
 
-      <div className='mt-20 space-y-5 mx-auto flex flex-col items-center overflow-hidden'>
+      <div className='mt-30 space-y-5 mx-auto flex flex-col items-center overflow-hidden'>
         <div className='text-3xl font-bold'>
-          Your AI Interview Coach - Ready to Lend a Helping Hand
+          Your Personalized AI Interview Coach - Ready to Lend a Helping Hand
         </div>
 
         <DistortionComponent src={'/helping_hand.jpg'} />
+        <div className='text-md'>
+          Upload your resume and job description, and get a personalized mock
+          interview from an AI agent. Receive real-time feedback, scores, and
+          prep suggestions.
+        </div>
       </div>
 
-      <div className='flex flex-col gap-5 mt-20'>
+      <div className='flex flex-col gap-5 mt-30'>
         <h5 className='text-3xl font-bold'>Our Tools</h5>
         <div className='flex flex-col sm:flex-row justify-center gap-10'>
           {tools &&
@@ -97,7 +102,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className='mt-20 space-y-5'>
+      <div className='mt-30 space-y-5'>
         <h3 className='text-3xl font-bold'>
           An Agent that Works for You - No Matter Your Job Title
         </h3>

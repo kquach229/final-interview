@@ -58,7 +58,7 @@ const RoleForm = () => {
     console.log(values);
   }
   return (
-    <div className='w-full'>
+    <div className='w-[100%]'>
       <h3 className='text-3xl font-bold text-center mt-10 mb-10'>
         Create Interview Prep
       </h3>

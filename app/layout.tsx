@@ -7,10 +7,10 @@ import SplashCursor from '@/blocks/Animations/SplashCursor/SplashCursor';
 
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
   SignedIn,
   SignedOut,
+  SignInButton,
+  SignUpButton,
   UserButton,
 } from '@clerk/nextjs';
 
@@ -38,12 +38,22 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body
-          className={`w-full ${geistSans.variable} ${geistMono.variable} antialiased`}>
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          {/* Optional: Accessibility skip link */}
+          <a href='#main-content' className='sr-only focus:not-sr-only'>
+            Skip to content
+          </a>
+
           <SplashCursor />
+
           <SidebarProvider>
             <AppSidebar />
             <SidebarTrigger />
-            <div className='mx-auto max-w-[1300px] p-5 w-full overflow-hidden'>
+
+            {/* Proper layout container */}
+            <div
+              id='main-content'
+              className='mx-auto max-w-[1300px] w-full px-5 py-6'>
               {children}
             </div>
           </SidebarProvider>

@@ -70,7 +70,6 @@ export default function Home() {
           Your Personalized AI Interview Coach - Ready to Lend a Helping Hand
         </div>
 
-        <DistortionComponent src={'/helping_hand.jpg'} />
         <div className='text-md'>
           Upload your resume and job description, and get a personalized mock
           interview from an AI agent. Receive real-time feedback, scores, and

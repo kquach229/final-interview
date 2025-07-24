@@ -216,7 +216,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`overflow-hidden rounded-sm ${className}`}
+      className={`w-full h-full overflow-hidden ${className}`}
     />
   );
 };

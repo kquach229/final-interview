@@ -40,9 +40,9 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           {/* Optional: Accessibility skip link */}
-          <a href='#main-content' className='sr-only focus:not-sr-only'>
+          {/* <a href='#main-content' className='sr-only focus:not-sr-only'>
             Skip to content
-          </a>
+          </a> */}
 
           <SplashCursor />
 
@@ -53,7 +53,7 @@ export default function RootLayout({
             {/* Proper layout container */}
             <div
               id='main-content'
-              className='mx-auto max-w-[1300px] w-full px-5 py-6'>
+              className='mx-auto max-w-[1300px] w-full px-5 py-6 overflow-hidden'>
               {children}
             </div>
           </SidebarProvider>

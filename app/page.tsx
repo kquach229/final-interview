@@ -1,4 +1,3 @@
-import GridDistortion from '@/blocks/Backgrounds/GridDistortion/GridDistortion';
 import DistortionComponent from '@/components/DistortionComponent';
 import SignupButtonComponent from '@/components/SignupButtonComponent';
 import { Badge } from '@/components/ui/badge';
@@ -70,6 +69,8 @@ export default function Home() {
           Your Personalized AI Interview Coach - Ready to Lend a Helping Hand
         </div>
 
+        <DistortionComponent src={'/helping_hand.jpg'} />
+
         <div className='text-md'>
           Upload your resume and job description, and get a personalized mock
           interview from an AI agent. Receive real-time feedback, scores, and
@@ -92,7 +93,7 @@ export default function Home() {
                 <CardContent>
                   <ul className='text-left'>
                     {tool.features.map((feature) => (
-                      <li className='inline-flex gap-5'>
+                      <li key={feature} className='inline-flex gap-5'>
                         <CheckCheckIcon className='text-final-interview-orange w-5' />
                         <div>{feature}</div>
                       </li>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,12 +9,21 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
 
-const ReusableDialog = ({ children, open, handleOpenChange, title }) => {
+type ReusableDialogProps = {
+  children: ReactNode;
+  open: boolean;
+  handleOpenChange: (open: boolean) => void;
+  title: string;
+};
+
+const ReusableDialog = ({
+  children,
+  open,
+  handleOpenChange,
+  title,
+}: ReusableDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>

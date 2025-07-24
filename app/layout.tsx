@@ -5,14 +5,8 @@ import AppSidebar from '@/components/Sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import SplashCursor from '@/blocks/Animations/SplashCursor/SplashCursor';
 
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
+import UserInit from '@/components/UserInit';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -43,7 +37,7 @@ export default function RootLayout({
           {/* <a href='#main-content' className='sr-only focus:not-sr-only'>
             Skip to content
           </a> */}
-
+          <UserInit />
           <SplashCursor />
 
           <SidebarProvider>

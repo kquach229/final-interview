@@ -6,7 +6,7 @@ import {
   SidebarHeader,
 } from './ui/sidebar';
 import Image from 'next/image';
-import { SignedIn } from '@clerk/nextjs';
+import { SignedIn, UserButton } from '@clerk/nextjs';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import SignupButtonComponent from './SignupButtonComponent';
 import { Button } from './ui/button';
@@ -20,9 +20,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { checkUser } from '@/lib/checkUser';
 
 const AppSidebar = async () => {
   const user = await currentUser();
+  await checkUser();
 
   return (
     <Sidebar className='w-[200px]'>
@@ -58,11 +60,7 @@ const AppSidebar = async () => {
         </SidebarGroup>
 
         <SidebarGroup>
-          {user ? (
-            <span>{user.emailAddresses[0].emailAddress}</span>
-          ) : (
-            <SignupButtonComponent />
-          )}
+          {user ? <UserButton /> : <SignupButtonComponent />}
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

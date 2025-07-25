@@ -40,36 +40,41 @@ const AppSidebar = async () => {
           width={400}
         />
       </SidebarHeader>
-      <SidebarContent className='flex flex-col items-center justify-between'>
-        <SidebarGroup>
-          <DropdownMenu>
-            <DropdownMenuTrigger className='text-left'>
-              <Button className='w-full flex justify-between'>
-                <div className='inline-flex items-center gap-2'>
-                  <Plus className='text-left' />
-                  Create
-                </div>
+      <SidebarContent className='flex flex-col justify-between'>
+        <div>
+          <SidebarGroup>
+            <DropdownMenu>
+              <DropdownMenuTrigger className='text-left'>
+                <Button className='w-full flex justify-between'>
+                  <div className='inline-flex items-center gap-2'>
+                    <Plus className='text-left' />
+                    Create
+                  </div>
 
-                <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>
-                <Link href='/dashboard/prep/role-form'>
-                  Create Interview Prep
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarGroup>
+                  <ChevronDown />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link href='/dashboard/prep/role-form'>
+                    Create Interview Prep
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarGroup>
 
-        <SidebarGroup>
-          {interviews.map((item) => (
-            <Link key={item.id} href={`/interview/${item.id}`}>
-              <Button>{item.jobTitle}</Button>
-            </Link>
-          ))}
-        </SidebarGroup>
+          <SidebarGroup className='space-y-2 mt-12'>
+            {interviews.map((item) => (
+              <Link
+                className='text-left'
+                key={item.id}
+                href={`/interview/${item.id}`}>
+                <Button className='w-full text-left'>{item.jobTitle}</Button>
+              </Link>
+            ))}
+          </SidebarGroup>
+        </div>
 
         <SidebarGroup>
           {user ? (

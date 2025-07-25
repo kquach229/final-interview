@@ -64,8 +64,9 @@ export default function RoleForm() {
     });
 
     const result = await response.json();
-    console.log(result);
+
     router.push(`/interview/${result.id}`);
+    router.refresh();
   };
 
   return (

@@ -23,7 +23,7 @@ import { prisma } from '@/lib/prisma';
 
 const AppSidebar = async () => {
   const user = await currentUser();
-  const interviews = await prisma.interview.findMany({
+  const interviews = await prisma?.interview.findMany({
     where: {
       userId: user?.id,
     },
@@ -65,8 +65,8 @@ const AppSidebar = async () => {
 
         <SidebarGroup>
           {interviews.map((item) => (
-            <Link href={`/interview/${item.id}`}>
-              <Button key={item.id}>{item.jobTitle}</Button>
+            <Link key={item.id} href={`/interview/${item.id}`}>
+              <Button>{item.jobTitle}</Button>
             </Link>
           ))}
         </SidebarGroup>

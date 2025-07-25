@@ -1,11 +1,11 @@
 'use client';
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -16,108 +16,126 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useUser } from '@clerk/nextjs';
 
 const formSchema = z.object({
-  jobTitle: z.string().min(2, {
-    message: 'job title must be at least 2 characters.',
-  }),
-  jobDescription: z.string().min(2, {
-    message: 'description must be at least 2 characters.',
-  }),
-  companyName: z.string().optional(),
+  title: z.string().min(2),
+  description: z.string().min(10),
+  company: z.string().optional(),
   companyDescription: z.string().optional(),
   resume: z
-    .any()
-    .optional()
-    .refine(
-      (file) => {
-        if (!file) return true;
-        return file instanceof File && file.type === 'application/pdf';
-      },
-      { message: 'Only PDF files are allowed.' }
-    ),
+    .custom<File>((file) => file instanceof File, {
+      message: 'Resume must be a file',
+    })
+    .optional(),
 });
 
-const RoleForm = () => {
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
+export default function RoleForm() {
+  const router = useRouter();
+  const user = useUser();
+
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      jobTitle: '',
-      jobDescription: '',
-      companyName: '',
+      title: '',
+      description: '',
+      company: '',
       companyDescription: '',
       resume: undefined,
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+  const onSubmit = async (data) => {
+    const response = await fetch('/api/generate-interview', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user.user?.id,
+        title: data.title,
+        description: data.description,
+        company: data.company,
+        companyDescription: data.companyDescription,
+        resumeContent: '',
+      }),
+    });
+
+    const result = await response.json();
+    console.log(result);
+    router.push(`/interview/${result.id}`);
+  };
+
   return (
-    <div className='w-[100%]'>
-      <h3 className='text-3xl font-bold text-center mt-10 mb-10'>
-        Create Interview Prep
-      </h3>
+    <div className='max-w-xl mx-auto p-4'>
+      <h1 className='text-2xl font-semibold mb-4'>Tell us about the role</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <FormField
             control={form.control}
-            name='jobTitle'
+            name='title'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Job Title</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Job Title' {...field} />
+                  <Input placeholder='Frontend Engineer' {...field} />
                 </FormControl>
-                <FormDescription>This is the job title</FormDescription>
+                <FormDescription>
+                  What position are you applying for?
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
-            name='jobDescription'
+            name='description'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Job Description</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Job Description' {...field} />
+                  <Textarea
+                    placeholder='Paste the job description here...'
+                    {...field}
+                  />
                 </FormControl>
-                <FormDescription>This is the job description</FormDescription>
+                <FormDescription>
+                  Include responsibilities, qualifications, etc.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
-            name='companyName'
+            name='company'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name (Optional)</FormLabel>
+                <FormLabel>Company Name (optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Company Name' {...field} />
+                  <Input placeholder='Google' {...field} />
                 </FormControl>
-                <FormDescription>This is the Company Name</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='companyDescription'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Description (Optional)</FormLabel>
+                <FormLabel>Company Description (optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Company Description' {...field} />
+                  <Textarea
+                    placeholder='Describe the company if you’d like.'
+                    {...field}
+                  />
                 </FormControl>
-                <FormDescription>
-                  This is the Company Description
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -128,29 +146,23 @@ const RoleForm = () => {
             name='resume'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Resume (Optional)</FormLabel>
+                <FormLabel>Resume (optional)</FormLabel>
                 <FormControl>
                   <Input
                     type='file'
-                    accept='application/pdf'
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      form.setValue('resume', file);
-                    }}
-                    placeholder='Upload Resume'
-                    ref={field.ref}
+                    accept='.pdf,.txt'
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
                   />
                 </FormControl>
-                <FormDescription>This is the job title</FormDescription>
+                <FormDescription>Upload a PDF or TXT file.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type='submit'>Submit</Button>
+
+          <Button type='submit'>Generate Mock Interview</Button>
         </form>
       </Form>
     </div>
   );
-};
-
-export default RoleForm;
+}

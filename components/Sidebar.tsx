@@ -6,24 +6,28 @@ import {
   SidebarHeader,
 } from './ui/sidebar';
 import Image from 'next/image';
-import { SignedIn, UserButton } from '@clerk/nextjs';
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { UserButton } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import SignupButtonComponent from './SignupButtonComponent';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { checkUser } from '@/lib/checkUser';
+import { prisma } from '@/lib/prisma';
 
 const AppSidebar = async () => {
   const user = await currentUser();
+  const interviews = await prisma.interview.findMany({
+    where: {
+      userId: user?.id,
+    },
+  });
   await checkUser();
 
   return (
@@ -60,7 +64,22 @@ const AppSidebar = async () => {
         </SidebarGroup>
 
         <SidebarGroup>
-          {user ? <UserButton /> : <SignupButtonComponent />}
+          {interviews.map((item) => (
+            <Link href={`/interview/${item.id}`}>
+              <Button key={item.id}>{item.jobTitle}</Button>
+            </Link>
+          ))}
+        </SidebarGroup>
+
+        <SidebarGroup>
+          {user ? (
+            <div className='flex items-center gap-2'>
+              <UserButton />
+              <span>{user.firstName}</span>
+            </div>
+          ) : (
+            <SignupButtonComponent />
+          )}
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

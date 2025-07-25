@@ -56,12 +56,14 @@ export default function RoleForm() {
   const onSubmit = async (data) => {
     setIsloading(true);
     let resumeContent;
+    let resumeFileName;
 
     if (data.resume) {
       resumeContent = await extractText(data.resume);
-    }
+      resumeFileName = await data.resume.name;
 
-    console.log(resumeContent);
+      console.log(resumeFileName);
+    }
 
     const response = await fetch('/api/generate-interview', {
       method: 'POST',
@@ -72,6 +74,7 @@ export default function RoleForm() {
         description: data.description,
         company: data.company,
         companyDescription: data.companyDescription,
+        resumeFileName,
         resumeContent,
       }),
     });

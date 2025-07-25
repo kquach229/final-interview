@@ -43,7 +43,10 @@ model Resume {
   id           String     @id @default(cuid())
   interviewId  String     @unique
   interview    Interview  @relation(fields: [interviewId], references: [id])
+  fileName String?
   content      String?    // <- Add this to store parsed resume text
+  createdAt DateTime @default(now())
+
 }
 
 model Question {

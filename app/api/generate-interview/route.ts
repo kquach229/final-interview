@@ -42,6 +42,8 @@ export async function POST(req: NextRequest) {
 
     const interviewId = uuidv4();
 
+    console.log(body);
+
     // Create Interview and linked Questions
     await prisma.interview.create({
       data: {
@@ -51,6 +53,7 @@ export async function POST(req: NextRequest) {
         resume: {
           create: {
             content: body.resumeContent, // store parsed resume text here
+            fileName: body.resumeFileName,
           },
         },
         questions: {

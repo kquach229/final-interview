@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,6 +35,7 @@ const formSchema = z.object({
 export default function RoleForm() {
   const router = useRouter();
   const user = useUser();
+  const [isLoading, setIsloading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -48,6 +49,7 @@ export default function RoleForm() {
   });
 
   const onSubmit = async (data) => {
+    setIsloading(true);
     const response = await fetch('/api/generate-interview', {
       method: 'POST',
       headers: {
@@ -161,7 +163,11 @@ export default function RoleForm() {
             )}
           />
 
-          <Button type='submit'>Generate Mock Interview</Button>
+          <Button type='submit' disabled={isLoading}>
+            {isLoading
+              ? 'Generating Your Interview Prep'
+              : 'Generate Mock Interview'}
+          </Button>
         </form>
       </Form>
     </div>

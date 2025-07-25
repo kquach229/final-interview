@@ -6,14 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
-const questions = [
-  'Tell me about yourself.',
-  'What’s your biggest strength?',
-  'Describe a time you failed and what you learned.',
-  'Why do you want to work here?',
-];
-
-export default function MockInterviewPage() {
+export default function MockInterviewPage({ questions }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [permissionGranted, setPermissionGranted] = useState(false);

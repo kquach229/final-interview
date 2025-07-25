@@ -1,9 +1,7 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { getInterview } from '@/lib/interviewStore';
 import { prisma } from '@/lib/prisma';
-import { notFound } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MockInterviewPage from '@/components/MockInterview';
+import PracticeQuestionsList from '@/components/PracticeQuestionsList';
 
 interface InterviewPageProps {
   params: { id: string };
@@ -16,6 +14,9 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
     where: {
       interviewId: id,
     },
+    include: {
+      interview: true,
+    },
   });
 
   return (
@@ -23,7 +24,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
       <h1 className='text-2xl font-bold mb-4'>Preparation</h1>
 
       <div className='mt-20 mb-20'>
-        <Tabs defaultValue='account'>
+        <Tabs defaultValue='practice-questions'>
           <TabsList className='w-full'>
             <TabsTrigger value='practice-questions'>
               Practice Questions
@@ -31,18 +32,12 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
             <TabsTrigger value='mock-interview'>Mock Interview</TabsTrigger>
           </TabsList>
           <TabsContent value='practice-questions'>
-            <ul className='space-y-5 mt-12'>
-              {questions.map((question) => (
-                <li key={question.id}>
-                  <Card>
-                    <CardContent>{question.text}</CardContent>
-                  </Card>
-                </li>
-              ))}
-            </ul>
+            <PracticeQuestionsList questions={questions} />
           </TabsContent>
           <TabsContent value='mock-interview'>
-            <MockInterviewPage />
+            <MockInterviewPage
+              questions={questions.map((question) => question.text)}
+            />
           </TabsContent>
         </Tabs>
       </div>

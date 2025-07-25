@@ -21,7 +21,11 @@ export async function POST(req: NextRequest) {
       body.companyDescription
         ? `Company overview: ${body.companyDescription}.`
         : ''
-    } ${body.resumeContent ? `Candidate resume: ${body.resumeContent}` : ''}`;
+    } ${
+      body.resumeContent
+        ? `Ask some questions specific to the candidate's resume if possible: ${body.resumeContent}`
+        : ''
+    }`;
 
     const result = await ai.models.generateContent({
       model: 'gemini-1.5-flash-8b',

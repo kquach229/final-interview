@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@clerk/nextjs';
+import pdfToText from 'react-pdftotext';
 
 const formSchema = z.object({
   title: z.string().min(2),
@@ -48,13 +49,19 @@ export default function RoleForm() {
     },
   });
 
+  async function extractText(file) {
+    return await pdfToText(file);
+  }
+
   const onSubmit = async (data) => {
     setIsloading(true);
-    let resumeContent = '';
+    let resumeContent;
 
     if (data.resume) {
-      resumeContent = '';
+      resumeContent = await extractText(data.resume);
     }
+
+    console.log(resumeContent);
 
     const response = await fetch('/api/generate-interview', {
       method: 'POST',

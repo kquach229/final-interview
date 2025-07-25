@@ -42,8 +42,13 @@ export async function POST(req: NextRequest) {
     await prisma.interview.create({
       data: {
         id: interviewId,
-        userId: body.userId, // make sure you're passing this from client
+        userId: body.userId,
         jobTitle: body.title,
+        resume: {
+          create: {
+            content: body.resumeContent, // store parsed resume text here
+          },
+        },
         questions: {
           create: questionsArray.map((q) => ({
             text: q,

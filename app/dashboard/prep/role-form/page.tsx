@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-
+import { createWorker } from 'tesseract.js';
 import {
   Form,
   FormControl,
@@ -50,23 +50,26 @@ export default function RoleForm() {
 
   const onSubmit = async (data) => {
     setIsloading(true);
+    let resumeContent = '';
+
+    if (data.resume) {
+      resumeContent = '';
+    }
+
     const response = await fetch('/api/generate-interview', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         userId: user.user?.id,
         title: data.title,
         description: data.description,
         company: data.company,
         companyDescription: data.companyDescription,
-        resumeContent: '',
+        resumeContent,
       }),
     });
 
     const result = await response.json();
-
     router.push(`/interview/${result.id}`);
     router.refresh();
   };
@@ -143,7 +146,6 @@ export default function RoleForm() {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name='resume'

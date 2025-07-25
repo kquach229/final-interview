@@ -8,7 +8,7 @@ interface InterviewPageProps {
 }
 
 export default async function InterviewPage({ params }: InterviewPageProps) {
-  const id = await params.id;
+  const { id } = await params;
 
   const questions = await prisma.question.findMany({
     where: {

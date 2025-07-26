@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { checkUser } from '@/lib/checkUser';
 import { prisma } from '@/lib/prisma';
 
-const AppSidebar = async () => {
+const AppSidebar = async ({}) => {
   const user = await currentUser();
   const interviews = await prisma?.interview.findMany({
     where: {
@@ -70,7 +70,7 @@ const AppSidebar = async () => {
                 className='text-left'
                 key={item.id}
                 href={`/interview/${item.id}`}>
-                <Button className='w-full text-left'>{item.jobTitle}</Button>
+                <Button className={`w-full text-left`}>{item.jobTitle}</Button>
               </Link>
             ))}
           </SidebarGroup>

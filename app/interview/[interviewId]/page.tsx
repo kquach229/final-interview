@@ -10,15 +10,15 @@ import {
 import { InfoIcon } from 'lucide-react';
 
 interface InterviewPageProps {
-  params: { id: string };
+  params: { interviewId: string };
 }
 
 export default async function InterviewPage({ params }: InterviewPageProps) {
-  const { id } = await params;
+  const { interviewId } = await params;
 
   const questions = await prisma.question.findMany({
     where: {
-      interviewId: id,
+      interviewId: interviewId,
     },
     include: {
       interview: true,
@@ -27,7 +27,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
 
   const interview = await prisma.interview.findUnique({
     where: {
-      id: id,
+      id: interviewId,
     },
     include: {
       resume: true,
@@ -44,7 +44,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
             <TooltipTrigger>
               <InfoIcon className='w-3' />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className='max-w-40'>
               You provided a resume file for this position on{' '}
               {`${new Date(interview.resume.createdAt).toLocaleDateString()}`}.
               Some questions are tailored based on your provided resume

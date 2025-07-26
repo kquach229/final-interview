@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     }" and job description "${body.description}", generate ${
       body.company
         ? `a set of 10 mock interview questions for a role at ${body.company}.`
-        : 'a general set of 10 mock interview questions. Be sure not to include anything other than the questions.'
+        : 'a general set of 10 mock interview questions. Be sure not to include anything other than the questions (asterisks, header, etc).'
     } ${
       body.companyDescription
         ? `Company overview: ${body.companyDescription}.`
@@ -41,8 +41,6 @@ export async function POST(req: NextRequest) {
       .filter((q) => q.length > 0);
 
     const interviewId = uuidv4();
-
-    console.log(body);
 
     // Create Interview and linked Questions
     await prisma.interview.create({

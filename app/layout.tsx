@@ -38,7 +38,7 @@ export default function RootLayout({
             Skip to content
           </a> */}
           <UserInit />
-          <SplashCursor />
+          {/* <SplashCursor /> */}
 
           <SidebarProvider>
             <AppSidebar />

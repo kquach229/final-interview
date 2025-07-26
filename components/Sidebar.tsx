@@ -20,6 +20,7 @@ import { ChevronDown, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { checkUser } from '@/lib/checkUser';
 import { prisma } from '@/lib/prisma';
+import SidebarInterviewSelection from './SidebarInterviewSelection';
 
 const AppSidebar = async ({}) => {
   const user = await currentUser();
@@ -56,23 +57,14 @@ const AppSidebar = async ({}) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link href='/dashboard/prep/role-form'>
-                    Create Interview Prep
-                  </Link>
+                  <Link href='/prep/role-form'>Create Interview Prep</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarGroup>
 
           <SidebarGroup className='space-y-2 mt-12'>
-            {interviews.map((item) => (
-              <Link
-                className='text-left'
-                key={item.id}
-                href={`/interview/${item.id}`}>
-                <Button className={`w-full text-left`}>{item.jobTitle}</Button>
-              </Link>
-            ))}
+            <SidebarInterviewSelection interviews={interviews} />
           </SidebarGroup>
         </div>
 

@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
-import { SignUp, SignUpButton, useUser } from '@clerk/nextjs';
-import { Button } from './ui/button';
+import { SignUp, SignUpButton } from '@clerk/nextjs';
 
 const SignupButtonComponent = () => {
   return <SignUpButton>Sign Up</SignUpButton>;

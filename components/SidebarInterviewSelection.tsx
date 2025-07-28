@@ -13,7 +13,7 @@ const SidebarInterviewSelection = ({ interviews }) => {
         <Link
           className='text-left'
           key={item.id}
-          href={`/interview/${item.id}`}>
+          href={`/interviews/${item.id}`}>
           <Button
             className={`w-full text-left h-12 ${
               pathname.includes(item.id)

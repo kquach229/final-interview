@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { createWorker } from 'tesseract.js';
 import {
   Form,
   FormControl,
@@ -24,7 +23,7 @@ import pdfToText from 'react-pdftotext';
 const formSchema = z.object({
   title: z.string().min(2),
   description: z.string().min(10),
-  company: z.string().optional(),
+  companyName: z.string().optional(),
   companyDescription: z.string().optional(),
   resume: z
     .custom<File>((file) => file instanceof File, {
@@ -43,7 +42,7 @@ export default function RoleForm() {
     defaultValues: {
       title: '',
       description: '',
-      company: '',
+      companyName: '',
       companyDescription: '',
       resume: undefined,
     },
@@ -72,7 +71,7 @@ export default function RoleForm() {
         userId: user.user?.id,
         title: data.title,
         description: data.description,
-        company: data.company,
+        companyName: data.companyName,
         companyDescription: data.companyDescription,
         resumeFileName,
         resumeContent,
@@ -80,7 +79,7 @@ export default function RoleForm() {
     });
 
     const result = await response.json();
-    router.push(`/interview/${result.id}`);
+    router.push(`/interviews/${result.id}`);
     router.refresh();
   };
 
@@ -128,7 +127,7 @@ export default function RoleForm() {
 
           <FormField
             control={form.control}
-            name='company'
+            name='companyName'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Company Name (optional)</FormLabel>

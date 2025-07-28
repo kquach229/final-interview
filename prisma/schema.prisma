@@ -31,8 +31,10 @@ model User {
 model Interview {
   id           String       @id @default(cuid())
   userId       String
-  user         User         @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete:Cascade)
   jobTitle     String
+  companyName String?
+  companyDescription String?
   resume Resume?
   questions    Question[]
   createdAt    DateTime     @default(now())
@@ -42,7 +44,7 @@ model Interview {
 model Resume {
   id           String     @id @default(cuid())
   interviewId  String     @unique
-  interview    Interview  @relation(fields: [interviewId], references: [id])
+  interview    Interview  @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   fileName String?
   content      String?    // <- Add this to store parsed resume text
   createdAt DateTime @default(now())
@@ -52,7 +54,9 @@ model Resume {
 model Question {
   id           String       @id @default(cuid())
   interviewId  String
-  interview    Interview    @relation(fields: [interviewId], references: [id])
+  interview    Interview    @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  guidelines String?
+  sampleResponse String?
 
   text         String       // Question text
   duration     Int?         // Duration in seconds

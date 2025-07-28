@@ -1,19 +1,8 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Textarea } from './ui/textarea';
-import { Button } from './ui/button';
+import { prisma } from '@/lib/prisma';
 
-export const TypeAnswerBox = () => {
-  return (
-    <>
-      <Textarea placeholder='Type your response here...' />
-      <Button>Submit</Button>
-      <Button>Generate Answer</Button>
-    </>
-  );
-};
-
-export const InputBox = () => {
+export const InputBox = async () => {
   return (
     <div>
       <Tabs defaultValue='account' className='w-[400px]'>
@@ -30,6 +19,40 @@ export const InputBox = () => {
   );
 };
 
-export const OutputBox = () => {
-  return <div>Output Box</div>;
+export const OutputBox = async ({ questionId }) => {
+  await fetch('/generate-sample-and-guidelines', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      questionId: questionId,
+    }),
+  });
+
+  const question = await prisma.question.findUnique({
+    where: {
+      id: questionId,
+    },
+  });
+
+  return (
+    <div>
+      <Tabs defaultValue='question' className='w-[400px]'>
+        <TabsList>
+          <TabsTrigger value='question'>Question</TabsTrigger>
+          <TabsTrigger value='guidelines'>Guidelines</TabsTrigger>
+          <TabsTrigger value='sample'>Sample</TabsTrigger>
+        </TabsList>
+
+        <div className='border-black'>
+          <TabsContent value='question'>
+            <div>{question?.text}</div>
+          </TabsContent>
+          <TabsContent value='guidelines'>
+            <div>{question?.guidelines}</div>
+          </TabsContent>
+          <TabsContent value='sample'>{question?.sampleResponse}</TabsContent>
+        </div>
+      </Tabs>
+    </div>
+  );
 };

@@ -68,7 +68,9 @@ Avoid using markdown characters like asterisks, underscores, or tildes.`;
     const guidelines = fullText.slice(0, splitIndex).replace('1.', '').trim();
     const sampleResponse = fullText.slice(splitIndex).replace('2.', '').trim();
 
-    await prisma.question.update({
+    console.log(sampleResponse);
+
+    const res = await prisma.question.update({
       where: { id: question.id },
       data: {
         guidelines,
@@ -76,7 +78,7 @@ Avoid using markdown characters like asterisks, underscores, or tildes.`;
       },
     });
 
-    return NextResponse.json({ guidelines, sampleResponse });
+    return NextResponse.json(res);
   } catch (error) {
     console.error(error);
     return NextResponse.json(

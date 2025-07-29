@@ -1,30 +1,60 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Skeleton } from './ui/skeleton';
-import { prisma } from '@/lib/prisma';
 import { Card, CardContent } from './ui/card';
 import { substring } from '@/lib/utils';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const OutputBox = ({
   questionId,
   question,
 }: {
   questionId: string;
-  question: string;
+  question: {
+    text: string;
+    submissions: {
+      id: string;
+      text: string;
+      feedback?: string | null;
+      createdAt: string;
+    }[];
+  };
 }) => {
   const [guidelines, setGuidelines] = useState('');
   const [sampleAnswer, setSampleAnswer] = useState('');
-
   const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('question');
 
-  console.log(question, questionId);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const submissionId = searchParams.get('submissionId');
+
+  const selectedSubmission = question?.submissions?.find(
+    (s) => s.id === submissionId
+  );
+
+  const createQueryString = (name: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(name, value);
+    return params.toString();
+  };
 
   useEffect(() => {
     const fetchAndGenerate = async () => {
       try {
         setLoading(true);
+
+        // Set default submission if none selected
+        if (!submissionId && question.submissions.length > 0) {
+          const defaultId = question.submissions[0].id;
+          const params = new URLSearchParams(searchParams.toString());
+          params.set('submissionId', defaultId);
+          router.replace(`${pathname}?${params.toString()}`);
+        }
+
         const res = await fetch('/api/generate-sample-and-guidelines', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -42,17 +72,23 @@ export const OutputBox = ({
     };
 
     fetchAndGenerate();
-  }, [questionId]);
+  }, [
+    questionId,
+    submissionId,
+    searchParams,
+    pathname,
+    question.submissions,
+    router,
+  ]);
 
-  const sortedSubmissions = [...(question?.submissions || [])].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-
-  const feedbackSubmissions = sortedSubmissions.filter((s) => s.feedback);
+  console.log(sampleAnswer);
 
   return (
     <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
-      <Tabs defaultValue='question' className='w-full'>
+      <Tabs
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+        className='w-full'>
         <TabsList className='grid w-full grid-cols-5'>
           <TabsTrigger value='question'>Question</TabsTrigger>
           <TabsTrigger value='guidelines'>Guidelines</TabsTrigger>
@@ -63,7 +99,7 @@ export const OutputBox = ({
 
         <div className='mt-4 min-h-[160px] space-y-2 text-sm text-zinc-700 dark:text-zinc-100 font-mono whitespace-pre-wrap'>
           <TabsContent value='question'>
-            {loading ? <Skeleton className='h-24 w-full' /> : question?.text}
+            {loading ? <Skeleton className='h-24 w-full' /> : question.text}
           </TabsContent>
 
           <TabsContent value='guidelines'>
@@ -79,8 +115,18 @@ export const OutputBox = ({
               <Skeleton className='h-24 w-full' />
             ) : (
               <div className='space-y-5'>
-                {sortedSubmissions.map((submission) => (
-                  <Card key={submission.id} className='p-5 w-full'>
+                {question.submissions.map((submission) => (
+                  <Card
+                    key={submission.id}
+                    onClick={() => {
+                      router.push(
+                        pathname +
+                          '?' +
+                          createQueryString('submissionId', submission.id)
+                      );
+                      setSelectedTab('feedback');
+                    }}
+                    className='p-5 w-full cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800'>
                     <CardContent className='w-full'>
                       <div className='flex items-center justify-between w-full'>
                         <div className='text-sm text-zinc-600 dark:text-zinc-300'>
@@ -98,28 +144,28 @@ export const OutputBox = ({
           </TabsContent>
 
           <TabsContent value='feedback'>
-            {feedbackSubmissions.length === 0 ? (
-              <div className='text-sm text-zinc-400 italic'>
-                No feedback yet.
+            {!selectedSubmission?.feedback ? (
+              <div className='text-zinc-400 italic text-sm'>
+                No feedback generated yet.
               </div>
             ) : (
-              feedbackSubmissions.map((submission) => (
-                <Card key={submission.id} className='p-4'>
-                  <CardContent>
-                    <div className='text-xs text-zinc-400 mb-2'>
-                      {new Date(submission.createdAt).toLocaleDateString()}
-                    </div>
-                    <div className='font-semibold mb-1'>Response:</div>
-                    <div className='mb-4 whitespace-pre-wrap'>
-                      {submission.text}
-                    </div>
-                    <div className='font-semibold mb-1'>Feedback:</div>
-                    <div className='whitespace-pre-wrap'>
-                      {submission.feedback}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+              <Card className='p-4'>
+                <CardContent>
+                  <div className='text-xs text-zinc-400 mb-2'>
+                    {new Date(
+                      selectedSubmission.createdAt
+                    ).toLocaleDateString()}
+                  </div>
+                  <div className='font-semibold mb-1'>Response:</div>
+                  <div className='mb-4 whitespace-pre-wrap'>
+                    {selectedSubmission.text}
+                  </div>
+                  <div className='font-semibold mb-1'>Feedback:</div>
+                  <div className='whitespace-pre-wrap'>
+                    {selectedSubmission.feedback}
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </TabsContent>
         </div>

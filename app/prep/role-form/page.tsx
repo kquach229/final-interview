@@ -22,7 +22,7 @@ import pdfToText from 'react-pdftotext';
 
 const formSchema = z.object({
   title: z.string().min(2),
-  description: z.string().min(10),
+  jobDescription: z.string().min(10),
   companyName: z.string().optional(),
   companyDescription: z.string().optional(),
   resume: z
@@ -41,7 +41,7 @@ export default function RoleForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
-      description: '',
+      jobDescription: '',
       companyName: '',
       companyDescription: '',
       resume: undefined,
@@ -60,8 +60,6 @@ export default function RoleForm() {
     if (data.resume) {
       resumeContent = await extractText(data.resume);
       resumeFileName = await data.resume.name;
-
-      console.log(resumeFileName);
     }
 
     const response = await fetch('/api/generate-interview', {
@@ -70,7 +68,7 @@ export default function RoleForm() {
       body: JSON.stringify({
         userId: user.user?.id,
         title: data.title,
-        description: data.description,
+        jobDescription: data.jobDescription,
         companyName: data.companyName,
         companyDescription: data.companyDescription,
         resumeFileName,
@@ -107,7 +105,7 @@ export default function RoleForm() {
 
           <FormField
             control={form.control}
-            name='description'
+            name='jobDescription'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Job Description</FormLabel>

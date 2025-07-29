@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
     const prompt = `You are an AI mock interviewer. Based on the job title "${
       body.title
-    }" and job description "${body.description}", generate ${
+    }" and job description "${body.jobDescription}", generate ${
       body.companyName
         ? `a set of 10 mock interview questions for a role at ${body.companyName}.`
         : 'a general set of 10 mock interview questions. Be sure not to include anything other than the questions (asterisks, header, etc).'
@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
         id: interviewId,
         userId: body.userId,
         jobTitle: body.title,
+        jobDescription: body.jobDescription,
         companyName: body.companyName,
         companyDescription: body.companyDescription,
         resume: {

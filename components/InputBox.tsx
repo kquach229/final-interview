@@ -17,7 +17,7 @@ export default function InputBox({ questionId }) {
   const handleSubmitTextSubmission = async (e) => {
     e.preventDefault();
 
-    await fetch('/api/submission', {
+    const res = await fetch('/api/submission', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,6 +26,24 @@ export default function InputBox({ questionId }) {
         type: 'typed-submission',
         questionId,
         content: textAnswer,
+      }),
+    });
+
+    const { newSubmission } = await res.json();
+
+    if (!newSubmission.id) {
+      console.error('Submission failed');
+      return;
+    }
+
+    await fetch('/api/generate-feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        submissionId: newSubmission.id,
+        questionId,
       }),
     });
 

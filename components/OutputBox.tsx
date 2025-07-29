@@ -19,6 +19,8 @@ export const OutputBox = ({
 
   const [loading, setLoading] = useState(false);
 
+  console.log(question, questionId);
+
   useEffect(() => {
     const fetchAndGenerate = async () => {
       try {
@@ -42,16 +44,21 @@ export const OutputBox = ({
     fetchAndGenerate();
   }, [questionId]);
 
-  const submissions = question?.submissions;
+  const sortedSubmissions = [...(question?.submissions || [])].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  const feedbackSubmissions = sortedSubmissions.filter((s) => s.feedback);
 
   return (
     <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
       <Tabs defaultValue='question' className='w-full'>
-        <TabsList className='grid w-full grid-cols-4'>
+        <TabsList className='grid w-full grid-cols-5'>
           <TabsTrigger value='question'>Question</TabsTrigger>
           <TabsTrigger value='guidelines'>Guidelines</TabsTrigger>
           <TabsTrigger value='sample'>Sample</TabsTrigger>
           <TabsTrigger value='submissions'>Submissions</TabsTrigger>
+          <TabsTrigger value='feedback'>Feedback</TabsTrigger>
         </TabsList>
 
         <div className='mt-4 min-h-[160px] space-y-2 text-sm text-zinc-700 dark:text-zinc-100 font-mono whitespace-pre-wrap'>
@@ -72,13 +79,14 @@ export const OutputBox = ({
               <Skeleton className='h-24 w-full' />
             ) : (
               <div className='space-y-5'>
-                {submissions?.map((submission) => (
-                  <Card className='p-5 w-full'>
+                {sortedSubmissions.map((submission) => (
+                  <Card key={submission.id} className='p-5 w-full'>
                     <CardContent className='w-full'>
                       <div className='flex items-center justify-between w-full'>
-                        <div>{substring(submission.text, 15)}</div>
-                        {/* <span>{submission.createdAt}</span> */}
-                        <div>
+                        <div className='text-sm text-zinc-600 dark:text-zinc-300'>
+                          {substring(submission.text, 50)}
+                        </div>
+                        <div className='text-xs text-zinc-500'>
                           {new Date(submission.createdAt).toLocaleDateString()}
                         </div>
                       </div>
@@ -86,6 +94,32 @@ export const OutputBox = ({
                   </Card>
                 ))}
               </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value='feedback'>
+            {feedbackSubmissions.length === 0 ? (
+              <div className='text-sm text-zinc-400 italic'>
+                No feedback yet.
+              </div>
+            ) : (
+              feedbackSubmissions.map((submission) => (
+                <Card key={submission.id} className='p-4'>
+                  <CardContent>
+                    <div className='text-xs text-zinc-400 mb-2'>
+                      {new Date(submission.createdAt).toLocaleDateString()}
+                    </div>
+                    <div className='font-semibold mb-1'>Response:</div>
+                    <div className='mb-4 whitespace-pre-wrap'>
+                      {submission.text}
+                    </div>
+                    <div className='font-semibold mb-1'>Feedback:</div>
+                    <div className='whitespace-pre-wrap'>
+                      {submission.feedback}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
             )}
           </TabsContent>
         </div>

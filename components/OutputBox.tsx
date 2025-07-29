@@ -157,17 +157,6 @@ export const OutputBox = ({
                         selectedSubmission.createdAt
                       ).toLocaleDateString()}
                     </div>
-                    {
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <InfoIcon className='w-3' />
-                        </TooltipTrigger>
-                        <TooltipContent className='max-w-40'>
-                          Feedback is based on the info you provided including
-                          desired job title, job description, resume, etc.
-                        </TooltipContent>
-                      </Tooltip>
-                    }
                   </div>
                   <div className='font-semibold mb-1'>Response:</div>
                   <div className='mb-4 whitespace-pre-wrap'>

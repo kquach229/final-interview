@@ -62,7 +62,7 @@ export const OutputBox = ({
         });
         const data = await res.json();
         setGuidelines(data.guidelines);
-        setSampleAnswer(data.sampleAnswer);
+        setSampleAnswer(data.sampleResponse);
       } catch (err) {
         console.error('Failed to load question content');
       } finally {

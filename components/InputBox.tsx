@@ -4,20 +4,38 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import VideoSubmission, { RecordVideo } from './VideoSubmission';
+import { RecordVideo } from './VideoSubmission';
 import { useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/form';
 
-const CLOUD_NAME = 'your-cloud-name';
-const UPLOAD_PRESET = 'your-upload-preset';
+const formSchema = z.object({
+  textResponse: z.string().min(5, {
+    message: 'Response must be at least 5 characters',
+  }),
+});
 
 export default function InputBox({ questionId }) {
-  const [textAnswer, setTextAnswer] = useState('');
   const [submittingSubmission, setSubmittingSubmission] = useState(false);
   const router = useRouter();
 
-  const handleSubmitTextSubmission = async (e) => {
-    e.preventDefault();
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      textResponse: '',
+    },
+  });
 
+  const handleSubmitTextSubmission = async (formData) => {
     setSubmittingSubmission(true);
 
     const res = await fetch('/api/submission', {
@@ -28,7 +46,7 @@ export default function InputBox({ questionId }) {
       body: JSON.stringify({
         type: 'typed-submission',
         questionId,
-        content: textAnswer,
+        content: formData.textResponse,
       }),
     });
 
@@ -52,7 +70,7 @@ export default function InputBox({ questionId }) {
 
     setSubmittingSubmission(false);
 
-    setTextAnswer('');
+    form.reset();
     router.refresh();
   };
 
@@ -66,19 +84,34 @@ export default function InputBox({ questionId }) {
 
         <div className='h-full mt-4 min-h-[380px] space-y-4 text-sm text-zinc-700 dark:text-zinc-100 font-mono'>
           <TabsContent className='h-full' value='typeAnswer'>
-            <form
-              className='h-full flex-col justify-between'
-              onSubmit={handleSubmitTextSubmission}>
-              <Textarea
-                rows={24}
-                value={textAnswer}
-                onChange={(e) => setTextAnswer(e.target.value)}
-                placeholder='Type your answer here...'
-              />
-              <Button className='w-full mt-6' disabled={submittingSubmission}>
-                {submittingSubmission ? 'Submitting...' : 'Submit'}
-              </Button>
-            </form>
+            <Form {...form}>
+              <form
+                className='h-full flex-col justify-between'
+                onSubmit={form.handleSubmit(handleSubmitTextSubmission)}>
+                <FormField
+                  control={form.control}
+                  name='textResponse'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Textarea
+                          rows={24}
+                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder='Type your answer here...'
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button className='w-full mt-6' disabled={submittingSubmission}>
+                  {submittingSubmission ? 'Submitting...' : 'Submit'}
+                </Button>
+              </form>
+            </Form>
           </TabsContent>
 
           <TabsContent value='videoRecording'>

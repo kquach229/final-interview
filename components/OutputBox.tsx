@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Skeleton } from './ui/skeleton';
 import { Card, CardContent } from './ui/card';
@@ -32,9 +32,9 @@ export const OutputBox = ({
   const pathname = usePathname();
   const submissionId = searchParams.get('submissionId');
 
-  const selectedSubmission = question?.submissions?.find(
-    (s) => s.id === submissionId
-  );
+  const selectedSubmission = useMemo(() => {
+    return question?.submissions?.find((s) => s.id === submissionId);
+  }, [question.submissions, submissionId]);
 
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -43,27 +43,26 @@ export const OutputBox = ({
   };
 
   useEffect(() => {
+    if (!submissionId && question.submissions.length > 0) {
+      const defaultId = question.submissions[0].id;
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('submissionId', defaultId);
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+  }, [submissionId, question.submissions, searchParams, router, pathname]);
+
+  useEffect(() => {
     const fetchAndGenerate = async () => {
       try {
         setLoading(true);
-
-        // Set default submission if none selected
-        if (!submissionId && question.submissions.length > 0) {
-          const defaultId = question.submissions[0].id;
-          const params = new URLSearchParams(searchParams.toString());
-          params.set('submissionId', defaultId);
-          router.replace(`${pathname}?${params.toString()}`);
-        }
-
         const res = await fetch('/api/generate-sample-and-guidelines', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ questionId }),
         });
-
         const data = await res.json();
         setGuidelines(data.guidelines);
-        setSampleAnswer(data.sampleResponse);
+        setSampleAnswer(data.sampleAnswer);
       } catch (err) {
         console.error('Failed to load question content');
       } finally {
@@ -72,16 +71,12 @@ export const OutputBox = ({
     };
 
     fetchAndGenerate();
-  }, [
-    questionId,
-    submissionId,
-    searchParams,
-    pathname,
-    question.submissions,
-    router,
-  ]);
+  }, [questionId]);
 
-  console.log(sampleAnswer);
+  const handleSubmissionClick = (id: string) => {
+    router.push(`${pathname}?${createQueryString('submissionId', id)}`);
+    setSelectedTab('feedback');
+  };
 
   return (
     <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
@@ -118,14 +113,7 @@ export const OutputBox = ({
                 {question.submissions.map((submission) => (
                   <Card
                     key={submission.id}
-                    onClick={() => {
-                      router.push(
-                        pathname +
-                          '?' +
-                          createQueryString('submissionId', submission.id)
-                      );
-                      setSelectedTab('feedback');
-                    }}
+                    onClick={() => handleSubmissionClick(submission.id)}
                     className='p-5 w-full cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800'>
                     <CardContent className='w-full'>
                       <div className='flex items-center justify-between w-full'>

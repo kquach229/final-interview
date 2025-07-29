@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Skeleton } from './ui/skeleton';
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent } from './ui/card';
+import { substring } from '@/lib/utils';
 
 export const OutputBox = ({
   questionId,
@@ -75,7 +76,7 @@ export const OutputBox = ({
                   <Card className='p-5 w-full'>
                     <CardContent className='w-full'>
                       <div className='flex items-center justify-between w-full'>
-                        <div>{submission.text}</div>
+                        <div>{substring(submission.text, 15)}</div>
                         {/* <span>{submission.createdAt}</span> */}
                         <div>
                           {new Date(submission.createdAt).toLocaleDateString()}

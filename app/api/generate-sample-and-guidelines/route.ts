@@ -31,6 +31,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (question?.guidelines && question?.sampleResponse) {
+      const guidelines = question.guidelines;
+      const sampleResponse = question.sampleResponse;
+
+      return NextResponse.json({ guidelines, sampleResponse });
+    }
+
     const prompt = `You are helping someone answer a job interview question.
 The question is: ${question.text}
 

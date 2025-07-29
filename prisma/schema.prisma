@@ -57,11 +57,23 @@ model Question {
   interview    Interview    @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   guidelines String?
   sampleResponse String?
+  submissions QuestionSubmission[]
 
   text         String       // Question text
   duration     Int?         // Duration in seconds
 
   createdAt    DateTime     @default(now())
+}
+
+model QuestionSubmission {
+  id String @id @default(cuid())
+  questionId String
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  videoUrl String?
+  text String?
+  feedback String?
+  createdAt DateTime @default(now())
+
 }
 
 model Subscription {

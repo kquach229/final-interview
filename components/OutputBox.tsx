@@ -79,7 +79,7 @@ export const OutputBox = ({
   };
 
   return (
-    <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
+    <div className='w-full rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
       <Tabs
         value={selectedTab}
         onValueChange={setSelectedTab}

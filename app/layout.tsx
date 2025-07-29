@@ -47,7 +47,7 @@ export default function RootLayout({
             {/* Proper layout container */}
             <div
               id='main-content'
-              className='mx-auto max-w-[1300px] w-full px-5 py-6 overflow-hidden'>
+              className='mx-auto max-w-[1800px] w-full px-5 py-6 overflow-hidden'>
               {children}
             </div>
           </SidebarProvider>

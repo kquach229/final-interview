@@ -14,7 +14,7 @@ const QuestionPage = async ({ params }: { params: { questionId: string } }) => {
     },
   });
   return (
-    <div className='flex justify-around gap-10 mt-10'>
+    <div className='flex flex-col justify-around xl:flex-row   gap-10 mt-10'>
       <OutputBox questionId={params.questionId} question={question} />
       <InputBox questionId={params.questionId} />
     </div>

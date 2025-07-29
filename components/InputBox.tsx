@@ -57,18 +57,20 @@ export default function InputBox({ questionId }) {
   };
 
   return (
-    <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
+    <div className='w-full xl:max-w-lg rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
       <Tabs defaultValue='typeAnswer' className='w-full'>
         <TabsList className='grid w-full grid-cols-2'>
           <TabsTrigger value='typeAnswer'>Type Answer</TabsTrigger>
           <TabsTrigger value='videoRecording'>Video Recording</TabsTrigger>
         </TabsList>
 
-        <div className='mt-4 min-h-[180px] space-y-4 text-sm text-zinc-700 dark:text-zinc-100 font-mono'>
-          <TabsContent value='typeAnswer'>
-            <form onSubmit={handleSubmitTextSubmission}>
+        <div className='h-full mt-4 min-h-[380px] space-y-4 text-sm text-zinc-700 dark:text-zinc-100 font-mono'>
+          <TabsContent className='h-full' value='typeAnswer'>
+            <form
+              className='h-full flex-col justify-between'
+              onSubmit={handleSubmitTextSubmission}>
               <Textarea
-                rows={12}
+                rows={24}
                 value={textAnswer}
                 onChange={(e) => setTextAnswer(e.target.value)}
                 placeholder='Type your answer here...'

@@ -35,7 +35,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
   });
 
   return (
-    <div className='max-w-3xl mx-auto p-4'>
+    <div className='max-w-6xl mx-auto p-4'>
       <h1 className='text-4xl font-bold mb-4'>{`${interview?.jobTitle} Interview Questions`}</h1>
       {interview?.resume?.fileName && (
         <div className='text-right text-xs flex items-center gap-x-1'>

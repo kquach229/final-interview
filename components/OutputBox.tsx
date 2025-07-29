@@ -87,11 +87,21 @@ export const OutputBox = ({
         onValueChange={setSelectedTab}
         className='w-full'>
         <TabsList className='grid w-full grid-cols-5'>
-          <TabsTrigger value='question'>Question</TabsTrigger>
-          <TabsTrigger value='guidelines'>Guidelines</TabsTrigger>
-          <TabsTrigger value='sample'>Sample</TabsTrigger>
-          <TabsTrigger value='submissions'>Submissions</TabsTrigger>
-          <TabsTrigger value='feedback'>Feedback</TabsTrigger>
+          <TabsTrigger disabled={loading} value='question'>
+            Question
+          </TabsTrigger>
+          <TabsTrigger disabled={loading} value='guidelines'>
+            Guidelines
+          </TabsTrigger>
+          <TabsTrigger disabled={loading} value='sample'>
+            Sample
+          </TabsTrigger>
+          <TabsTrigger disabled={loading} value='submissions'>
+            Submissions
+          </TabsTrigger>
+          <TabsTrigger disabled={loading} value='feedback'>
+            Feedback
+          </TabsTrigger>
         </TabsList>
 
         <div className='mt-4 min-h-[160px] space-y-2 text-sm text-zinc-700 dark:text-zinc-100 font-mono whitespace-pre-wrap'>

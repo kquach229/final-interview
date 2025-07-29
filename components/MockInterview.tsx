@@ -40,7 +40,7 @@ export default function MockInterviewPage({ questions }) {
   };
 
   return (
-    <div className='max-w-4xl mx-auto py-10 px-4'>
+    <div className='max-w-6xl mx-auto py-10 px-4'>
       <Card>
         <CardHeader>
           <CardTitle className='text-xl'>Mock Interview</CardTitle>

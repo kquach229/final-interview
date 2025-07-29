@@ -6,6 +6,8 @@ import { Skeleton } from './ui/skeleton';
 import { Card, CardContent } from './ui/card';
 import { substring } from '@/lib/utils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import { InfoIcon } from 'lucide-react';
 
 export const OutputBox = ({
   questionId,
@@ -139,10 +141,23 @@ export const OutputBox = ({
             ) : (
               <Card className='p-4'>
                 <CardContent>
-                  <div className='text-xs text-zinc-400 mb-2'>
-                    {new Date(
-                      selectedSubmission.createdAt
-                    ).toLocaleDateString()}
+                  <div className='text-xs text-zinc-400 mb-2 flex flex-row justify-between'>
+                    <div>
+                      {new Date(
+                        selectedSubmission.createdAt
+                      ).toLocaleDateString()}
+                    </div>
+                    {
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className='w-3' />
+                        </TooltipTrigger>
+                        <TooltipContent className='max-w-40'>
+                          Feedback is based on the info you provided including
+                          desired job title, job description, resume, etc.
+                        </TooltipContent>
+                      </Tooltip>
+                    }
                   </div>
                   <div className='font-semibold mb-1'>Response:</div>
                   <div className='mb-4 whitespace-pre-wrap'>

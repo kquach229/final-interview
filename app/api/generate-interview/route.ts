@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       body.title
     }" and job description "${body.jobDescription}", generate ${
       body.companyName
-        ? `a set of 10 mock interview questions for a role at ${body.companyName}.`
+        ? `a set of 20 mock interview questions for a role at ${body.companyName}.`
         : 'a general set of 10 mock interview questions. Be sure not to include anything other than the questions (asterisks, header, etc).'
     } ${
       body.companyDescription

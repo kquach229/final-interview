@@ -5,12 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import VideoSubmission, { RecordVideo } from './VideoSubmission';
+import { useRouter } from 'next/navigation';
 
 const CLOUD_NAME = 'your-cloud-name';
 const UPLOAD_PRESET = 'your-upload-preset';
 
 export default function InputBox({ questionId }) {
   const [textAnswer, setTextAnswer] = useState('');
+  const router = useRouter();
 
   const handleSubmitTextSubmission = async (e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ export default function InputBox({ questionId }) {
     });
 
     setTextAnswer('');
+    router.refresh();
   };
 
   return (

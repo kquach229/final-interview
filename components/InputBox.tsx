@@ -12,10 +12,13 @@ const UPLOAD_PRESET = 'your-upload-preset';
 
 export default function InputBox({ questionId }) {
   const [textAnswer, setTextAnswer] = useState('');
+  const [submittingSubmission, setSubmittingSubmission] = useState(false);
   const router = useRouter();
 
   const handleSubmitTextSubmission = async (e) => {
     e.preventDefault();
+
+    setSubmittingSubmission(true);
 
     const res = await fetch('/api/submission', {
       method: 'POST',
@@ -47,6 +50,8 @@ export default function InputBox({ questionId }) {
       }),
     });
 
+    setSubmittingSubmission(false);
+
     setTextAnswer('');
     router.refresh();
   };
@@ -68,7 +73,9 @@ export default function InputBox({ questionId }) {
                 onChange={(e) => setTextAnswer(e.target.value)}
                 placeholder='Type your answer here...'
               />
-              <Button className='w-full mt-6'>Submit</Button>
+              <Button className='w-full mt-6' disabled={submittingSubmission}>
+                {submittingSubmission ? 'Submitting...' : 'Submit'}
+              </Button>
             </form>
           </TabsContent>
 

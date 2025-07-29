@@ -42,7 +42,7 @@ export const OutputBox = ({
     fetchAndGenerate();
   }, [questionId]);
 
-  const submissions = question.submissions;
+  const submissions = question?.submissions;
 
   return (
     <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>

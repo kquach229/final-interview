@@ -65,7 +65,7 @@ Avoid using markdown characters like asterisks, underscores, or tildes.`;
 
     // Basic extraction from model's full text
     const splitIndex = fullText.indexOf('2.');
-    const guidelines = fullText.slice(0, splitIndex).trim();
+    const guidelines = fullText.slice(0, splitIndex).replace('1.', '').trim();
     const sampleResponse = fullText.slice(splitIndex).replace('2.', '').trim();
 
     await prisma.question.update({

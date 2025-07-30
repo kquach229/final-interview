@@ -34,12 +34,14 @@ const AppSidebar = async ({}) => {
   return (
     <Sidebar className='w-[200px]'>
       <SidebarHeader>
-        <Image
-          src='/final_interview_logo.svg'
-          alt='final interview logo'
-          height={400}
-          width={400}
-        />
+        <Link href='/'>
+          <Image
+            src='/final_interview_logo.svg'
+            alt='final interview logo'
+            height={400}
+            width={400}
+          />
+        </Link>
       </SidebarHeader>
       <SidebarContent className='flex flex-col justify-between'>
         <div>

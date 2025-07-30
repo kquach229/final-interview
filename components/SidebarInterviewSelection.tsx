@@ -17,7 +17,7 @@ const SidebarInterviewSelection = ({ interviews }) => {
           <Button
             className={`w-full text-left h-12 ${
               pathname.includes(item.id)
-                ? 'bg-final-interview-orange'
+                ? 'bg-final-interview-orange font-semibold'
                 : 'bg-ring'
             }`}>
             {item.jobTitle}

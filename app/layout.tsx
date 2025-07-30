@@ -19,7 +19,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Final Interview',
+  title: {
+    default: 'Final Interview',
+    template: '%s | Final Interview',
+  },
   description: 'Your AI Interview Buddy',
 };
 

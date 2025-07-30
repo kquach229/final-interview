@@ -8,11 +8,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { InfoIcon } from 'lucide-react';
+import { Metadata } from 'next';
 
 interface InterviewPageProps {
   params: { interviewId: string };
 }
-
+export const metadata: Metadata = {
+  title: 'Interview',
+};
 export default async function InterviewPage({ params }: InterviewPageProps) {
   const { interviewId } = await params;
 

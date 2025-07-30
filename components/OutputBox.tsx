@@ -118,8 +118,10 @@ export const OutputBox = ({
           </TabsContent>
 
           <TabsContent value='submissions'>
-            {loading ? (
-              <Skeleton className='h-24 w-full' />
+            {question.submissions.length == 0 ? (
+              <div className='text-zinc-400 italic text-sm'>
+                No submissions yet.
+              </div>
             ) : (
               <div className='space-y-5'>
                 {question.submissions.map((submission) => (
@@ -146,7 +148,8 @@ export const OutputBox = ({
           <TabsContent value='feedback'>
             {!selectedSubmission?.feedback ? (
               <div className='text-zinc-400 italic text-sm'>
-                No feedback generated yet.
+                No feedback generated yet. Submit a response to the question in
+                order to get feedback
               </div>
             ) : (
               <Card className='p-4'>

@@ -68,6 +68,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
           </TabsContent>
           <TabsContent value='mock-interview'>
             <MockInterviewPage
+              interviewId={interviewId}
               questions={questions.map((question) => question.text)}
             />
           </TabsContent>

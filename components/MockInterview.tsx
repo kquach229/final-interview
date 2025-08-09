@@ -1,96 +1,89 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
+import {
+  ControlBar,
+  GridLayout,
+  ParticipantTile,
+  RoomAudioRenderer,
+  useTracks,
+  RoomContext,
+} from '@livekit/components-react';
+import { Room, Track } from 'livekit-client';
+import '@livekit/components-styles';
+import { useEffect, useState } from 'react';
 
-export default function MockInterviewPage({ questions }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [permissionGranted, setPermissionGranted] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+export default function Page({ interviewId }) {
+  // TODO: get user input for room and name
+  const room = 'quickstart-room';
+  const name = 'quickstart-user';
+
+  const [roomInstance] = useState(
+    () =>
+      new Room({
+        // Optimize video quality for each participant's screen
+        adaptiveStream: true,
+        // Enable automatic audio/video quality optimization
+        dynacast: true,
+      })
+  );
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((mediaStream) => {
-        setStream(mediaStream);
-        setPermissionGranted(true);
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
+    let mounted = true;
+    (async () => {
+      try {
+        const resp = await fetch(
+          `/api/token?room=${room}&username=${name}&interviewId=${interviewId}`
+        );
+        const data = await resp.json();
+        if (!mounted) return;
+        if (data.token) {
+          await roomInstance.connect(
+            process.env.NEXT_PUBLIC_LIVEKIT_URL,
+            data.token
+          );
         }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Permission denied or error:', err);
-        setPermissionGranted(false);
-        setLoading(false);
-      });
+      } catch (e) {
+        console.error(e);
+      }
+    })();
 
     return () => {
-      stream?.getTracks().forEach((track) => track.stop());
+      mounted = false;
+      roomInstance.disconnect();
     };
-  }, []);
-
-  const handleNextQuestion = () => {
-    setCurrentQuestionIndex((prev) => (prev + 1) % questions.length);
-  };
+  }, [roomInstance]);
 
   return (
-    <div className='max-w-6xl mx-auto py-10 px-4'>
-      <Card>
-        <CardHeader>
-          <CardTitle className='text-xl'>Mock Interview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {!permissionGranted && !loading && (
-            <div className='text-red-500 text-center mb-4'>
-              Camera and microphone permissions are required.
-            </div>
-          )}
+    <RoomContext.Provider value={roomInstance}>
+      <div data-lk-theme='default' style={{ height: '100dvh' }}>
+        {/* Your custom component with basic video conferencing functionality. */}
+        <MyVideoConference />
+        {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
+        <RoomAudioRenderer />
+        {/* Controls for the user to start/stop audio, video, and screen share tracks */}
+        <ControlBar />
+      </div>
+    </RoomContext.Provider>
+  );
+}
 
-          {loading ? (
-            <div className='grid grid-cols-1 gap-4'>
-              <Skeleton className='h-[300px] w-full rounded-xl' />
-              <Skeleton className='h-10 w-1/2 rounded' />
-            </div>
-          ) : (
-            <>
-              <div className='relative'>
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  playsInline
-                  className={cn(
-                    'rounded-xl w-full h-[300px] object-cover',
-                    !permissionGranted && 'opacity-50'
-                  )}
-                />
-              </div>
-
-              <div className='mt-6 text-lg font-medium'>
-                {questions[currentQuestionIndex]}
-              </div>
-
-              {/* Recorder placeholder – connect with actual recorder */}
-              <div className='mt-4 text-sm text-gray-500 italic'>
-                (Your answer will be recorded here.)
-              </div>
-
-              <div className='mt-6 flex items-center gap-4'>
-                <Button disabled={!permissionGranted}>Start Recording</Button>
-                <Button variant='outline' onClick={handleNextQuestion}>
-                  Next Question
-                </Button>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+function MyVideoConference() {
+  // `useTracks` returns all camera and screen share tracks. If a user
+  // joins without a published camera track, a placeholder track is returned.
+  const tracks = useTracks(
+    [
+      { source: Track.Source.Camera, withPlaceholder: true },
+      { source: Track.Source.ScreenShare, withPlaceholder: false },
+    ],
+    { onlySubscribed: false }
+  );
+  return (
+    <GridLayout
+      tracks={tracks}
+      style={{ height: 'calc(100vh - var(--lk-control-bar-height))' }}>
+      {/* The GridLayout accepts zero or one child. The child is used
+      as a template to render all passed in tracks. */}
+      <ParticipantTile />
+    </GridLayout>
   );
 }

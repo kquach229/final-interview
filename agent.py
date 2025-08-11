@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 from livekit import agents, api
 from livekit.agents import AgentSession, Agent, RoomInputOptions
-from livekit.plugins import google
+from livekit.plugins import google, silero
 
 load_dotenv()
 

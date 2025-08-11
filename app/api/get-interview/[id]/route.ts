@@ -5,7 +5,6 @@ export async function GET(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const interviewId = pathname.split('/')[3];
 
-  console.log('ran::::::::!!!!!!!!!!!!!!!!!!!!', interviewId);
   try {
     const interview = await prisma.interview.findUnique({
       where: { id: interviewId },

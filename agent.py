@@ -22,14 +22,16 @@ class Assistant(agents.Agent):
 
 
 async def entrypoint(ctx: agents.JobContext):
-    print(f"Entrypoint called for room: {ctx.job.room.metadata}")
-    metadata_str = json.loads(ctx.job.room.metadata)
+    
+    try:
+        
+      metadata_str = json.loads(ctx.job.room.metadata)
+      interviewId = metadata_str["interviewId"]
 
-    interviewId = metadata_str["interviewId"]
-    print(f"interviewid {interviewId}")
-
-  
-     
+      if not interviewId:
+          raise ValueError("interviewId is missing in room metadata")
+    except Exception as e:
+        raise RuntimeError(f"Failed to parse room metadata: {e}")
 
     res = requests.get(f"{API_BASE}/api/get-interview/{interviewId}")
     if res.status_code != 200:
@@ -42,7 +44,11 @@ async def entrypoint(ctx: agents.JobContext):
     at {interview.get('companyName', 'an unspecified company')}.
     Job Description: {interview['jobDescription']}
     Company Description: {interview.get('companyDescription', 'N/A')}
-    Resume: {interview.get('resume', 'No resume provided')}
+    Resume: {interview.get('resume', 'No resume provided')}. 
+    Start by greeting the candidate, and having some small talk with them. 
+    Afterwards, ask them a set of questions related to the position they are interviewing for. 
+    After each response to the question, give the candidate feedback on their response, and how they could work on it to improve. 
+    Oblige to candidate's requests accordingly if they request a change to the interview experience.
     """
 
     session = AgentSession(

@@ -11,7 +11,10 @@ const PracticeQuestionsList = async ({ questions }) => {
         <li key={question.id}>
           <Link
             href={`/interviews/${question.interviewId}/questions/${question.id}`}>
-            <Card className='cursor-pointer hover:bg-muted transition'>
+            <Card
+              className={`cursor-pointer hover:bg-muted transition ${
+                index + 1 > 3 ? 'blur-xs cursor-none' : ''
+              }`}>
               <CardContent>
                 {index + 1}. {question.text}
               </CardContent>

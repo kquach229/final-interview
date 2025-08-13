@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Plus } from "lucide-react";
 import Link from "next/link";
-import { checkUser } from "@/lib/checkUser";
 import { prisma } from "@/lib/prisma";
 import SidebarInterviewSelection from "./SidebarInterviewSelection";
 
@@ -44,31 +43,32 @@ const AppSidebar = async ({}) => {
         </Link>
       </SidebarHeader>
       <SidebarContent className="flex flex-col justify-between">
-        <div>
-          <SidebarGroup>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="text-left">
-                <Button className="w-full flex justify-between">
-                  <div className="inline-flex items-center gap-2">
-                    <Plus className="text-left" />
-                    Create
-                  </div>
+        {loggedInUser && (
+          <div>
+            <SidebarGroup>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="text-left">
+                  <Button className="w-full flex justify-between">
+                    <div className="inline-flex items-center gap-2">
+                      <Plus className="text-left" />
+                      Create
+                    </div>
 
-                  <ChevronDown />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href="/prep/role-form">Create Interview Prep</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarGroup>
-
-          <SidebarGroup className="space-y-2 mt-12">
-            <SidebarInterviewSelection interviews={interviews} />
-          </SidebarGroup>
-        </div>
+                    <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link href="/prep/role-form">Create Interview Prep</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarGroup>
+            <SidebarGroup className="space-y-2 mt-12">
+              <SidebarInterviewSelection interviews={interviews} />
+            </SidebarGroup>{" "}
+          </div>
+        )}
 
         <SidebarGroup>
           {loggedInUser ? (

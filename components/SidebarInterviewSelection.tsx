@@ -1,8 +1,8 @@
-'use client';
-import Link from 'next/link';
-import React from 'react';
-import { Button } from './ui/button';
-import { usePathname } from 'next/navigation';
+"use client";
+import Link from "next/link";
+import React from "react";
+import { Button } from "./ui/button";
+import { usePathname } from "next/navigation";
 
 const SidebarInterviewSelection = ({ interviews }) => {
   const pathname = usePathname();
@@ -11,15 +11,17 @@ const SidebarInterviewSelection = ({ interviews }) => {
     <>
       {interviews.map((item) => (
         <Link
-          className='text-left'
+          className="text-left"
           key={item.id}
-          href={`/interviews/${item.id}`}>
+          href={`/interviews/${item.id}`}
+        >
           <Button
-            className={`w-full text-left h-12 ${
+            className={`w-full text-left h-12 capitalize ${
               pathname.includes(item.id)
-                ? 'bg-final-interview-orange font-semibold'
-                : 'bg-ring'
-            }`}>
+                ? "bg-final-interview-orange font-semibold"
+                : "bg-ring"
+            }`}
+          >
             {item.jobTitle}
           </Button>
         </Link>

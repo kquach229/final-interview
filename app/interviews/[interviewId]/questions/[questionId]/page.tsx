@@ -19,6 +19,7 @@ const QuestionPage = async ({ params }: { params: { questionId: string } }) => {
       submissions: true,
     },
   });
+
   return (
     <div className="">
       <div>

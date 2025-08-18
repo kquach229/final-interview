@@ -1,13 +1,13 @@
-import React from "react";
-import { OutputBox } from "@/components/OutputBox";
-import { prisma } from "@/lib/prisma";
-import InputBox from "@/components/InputBox";
+import React from 'react';
+import { OutputBox } from '@/components/OutputBox';
+import { prisma } from '@/lib/prisma';
+import InputBox from '@/components/InputBox';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { InfoIcon } from "lucide-react";
+} from '@/components/ui/tooltip';
+import { InfoIcon } from 'lucide-react';
 
 const QuestionPage = async ({ params }: { params: { questionId: string } }) => {
   const { questionId } = await params;
@@ -21,15 +21,15 @@ const QuestionPage = async ({ params }: { params: { questionId: string } }) => {
   });
 
   return (
-    <div className="">
+    <div className=''>
       <div>
-        <div className="text-right">
+        <div className='text-right'>
           {
             <Tooltip>
               <TooltipTrigger>
-                <InfoIcon className="w-3" />
+                <InfoIcon className='w-3' />
               </TooltipTrigger>
-              <TooltipContent className="max-w-40">
+              <TooltipContent className='max-w-40'>
                 Output is based on the info you provided including desired job
                 title, job description, resume, etc.
               </TooltipContent>
@@ -37,7 +37,7 @@ const QuestionPage = async ({ params }: { params: { questionId: string } }) => {
           }
         </div>
       </div>
-      <div className="flex flex-col justify-around xl:flex-row gap-10 mt-10">
+      <div className='flex flex-col justify-around xl:flex-row gap-10 mt-10'>
         <OutputBox questionId={params.questionId} question={question} />
 
         <InputBox questionId={params.questionId} />

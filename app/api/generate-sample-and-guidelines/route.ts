@@ -20,7 +20,11 @@ export async function POST(req: NextRequest) {
     const question = await prisma.question.findUnique({
       where: { id: body.questionId },
       include: {
-        interview: true,
+        interview: {
+          include: {
+            resume: true,
+          },
+        },
       },
     });
 
@@ -50,6 +54,10 @@ ${
     ? `Here is what the company does: ${question.interview.companyDescription}`
     : ''
 }
+
+${question.interview.resume ? `Here is the resume they provided` : ''}
+
+
 
 Please provide:
 1. Guidelines or tips to help answer this question well.

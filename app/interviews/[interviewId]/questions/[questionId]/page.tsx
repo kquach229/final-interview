@@ -37,6 +37,7 @@ const QuestionPage = async ({ params }: { params: { questionId: string } }) => {
           }
         </div>
       </div>
+      <div className='font-extrabold text-4xl'>{question?.text}</div>
       <div className='flex flex-col justify-around xl:flex-row gap-10 mt-10'>
         <OutputBox questionId={params.questionId} question={question} />
 

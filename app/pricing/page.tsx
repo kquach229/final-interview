@@ -4,8 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
+import { FormEvent, useTransition } from 'react';
 
 export default function PricingPage() {
+  const [pending, startTransition] = useTransition();
   const plans = [
     {
       name: '1 Month',
@@ -14,7 +16,7 @@ export default function PricingPage() {
       features: [
         'Unlimited interview questions',
         'AI-generated personalized answers',
-        'Real-time feedback and scoring',
+        'Feedback and scoring',
         'Resume-to-question integration',
       ],
       cta: 'Choose 1 Month',
@@ -22,12 +24,12 @@ export default function PricingPage() {
     },
     {
       name: '3 Months',
-      price: '$40',
+      price: '$39',
       duration: '3 Months Access',
       features: [
         'Unlimited interview questions',
         'AI-generated personalized answers',
-        'Real-time feedback and scoring',
+        'Feedback and scoring',
         'Resume-to-question integration',
       ],
       cta: 'Choose 3 Months',
@@ -35,22 +37,42 @@ export default function PricingPage() {
     },
     {
       name: '6 Months',
-      price: '$70',
+      price: '$69',
       duration: '6 Months Access',
       features: [
         'Unlimited interview questions',
         'AI-generated personalized answers',
-        'Real-time feedback and scoring',
+        'Feedback and scoring',
         'Resume-to-question integration',
       ],
       cta: 'Choose 6 Months',
       popular: false,
     },
   ];
+  const handlePurchaseCta = async (e: FormEvent<HTMLFormElement>) => {
+    startTransition(async () => {
+      e.preventDefault();
+
+      const formData = new FormData(e.currentTarget);
+      const planName = formData.get('planName');
+
+      const response = await fetch('/api/checkout_sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planName }),
+      });
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url; // ✅ redirect to Stripe
+      } else {
+        alert(data.error || 'Something went wrong');
+      }
+    });
+  };
 
   return (
     <div className='max-w-6xl mx-auto px-6 py-16 space-y-16 text-center'>
-      {/* Header */}
       <div className='space-y-4'>
         <h1 className='text-4xl font-bold'>Subscription Plans</h1>
         <p className='text-muted-foreground max-w-2xl mx-auto'>
@@ -59,8 +81,7 @@ export default function PricingPage() {
         </p>
       </div>
 
-      {/* Pricing grid */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mt-10'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10'>
         {plans.map((plan) => (
           <Card
             key={plan.name}
@@ -82,32 +103,30 @@ export default function PricingPage() {
               </p>
             </CardHeader>
             <CardContent className='flex flex-col gap-6'>
-              <ul className='space-y-3 text-left'>
-                {plan.features.map((feature) => (
-                  <li key={feature} className='flex items-start gap-2'>
-                    <Check className='w-5 h-5 text-green-500' />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button
-                className={`w-full ${plan.popular ? 'bg-primary' : ''}`}
-                size='lg'>
-                {plan.cta}
-              </Button>
+              <form onSubmit={handlePurchaseCta}>
+                <input type='hidden' name='planName' value={plan.name} />
+                <ul className='space-y-3 text-left mb-5'>
+                  {plan.features.map((feature) => (
+                    <li key={feature} className='flex items-start gap-2'>
+                      <Check className='w-5 h-5 text-green-500' />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  disabled={pending}
+                  type='submit'
+                  role='link'
+                  className={`w-full cursor-pointer ${
+                    plan.popular ? 'bg-primary' : ''
+                  }`}
+                  size='lg'>
+                  {plan.cta}
+                </Button>
+              </form>
             </CardContent>
           </Card>
         ))}
-      </div>
-
-      {/* Closing CTA */}
-      <div className='mt-20 space-y-4'>
-        <h2 className='text-2xl font-semibold'>Start Practicing Today</h2>
-        <p className='text-muted-foreground'>
-          Choose a subscription duration that fits your preparation timeline and
-          gain full access to our AI interview coach.
-        </p>
-        <Button size='lg'>Get Started</Button>
       </div>
     </div>
   );

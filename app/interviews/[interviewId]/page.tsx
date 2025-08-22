@@ -7,11 +7,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { InfoIcon } from 'lucide-react';
+import { InfoIcon, Trash2Icon } from 'lucide-react';
 import { Metadata } from 'next';
 import { currentUser } from '@clerk/nextjs/server';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 interface InterviewPageProps {
   params: { interviewId: string };
@@ -36,7 +37,13 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
   });
 
   return (
-    <div className='max-w-6xl mx-auto p-4'>
+    <div className='max-w-6xl mx-auto p-4 relative'>
+      <Link
+        href={`/delete-interview/${interviewId}`}
+        className='absolute right-0 top-0 text-red-500 cursor-pointer'>
+        <Trash2Icon />
+      </Link>
+
       <h1 className='text-4xl font-bold mb-4'>{`${interview?.jobTitle} Interview Questions`}</h1>
       {interview?.resume?.fileName && (
         <div className='text-right text-xs flex items-center gap-x-1'>

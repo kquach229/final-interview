@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { Button } from './ui/button';
 import { usePathname } from 'next/navigation';
+import { Delete } from 'lucide-react';
 
 const SidebarInterviewSelection = ({ interviews }) => {
   const pathname = usePathname();

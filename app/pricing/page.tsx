@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { FormEvent, useTransition } from 'react';
+import PricingFAQ from '@/components/PricingFaq';
 
 export default function PricingPage() {
   const [pending, startTransition] = useTransition();
@@ -128,6 +129,7 @@ export default function PricingPage() {
           </Card>
         ))}
       </div>
+      <PricingFAQ />
     </div>
   );
 }

@@ -20,6 +20,7 @@ import { ChevronDown, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import SidebarInterviewSelection from './SidebarInterviewSelection';
+import { substring } from '@/lib/utils';
 
 const AppSidebar = async ({}) => {
   const loggedInUser = await currentUser();
@@ -48,7 +49,7 @@ const AppSidebar = async ({}) => {
             <SidebarGroup>
               <DropdownMenu>
                 <DropdownMenuTrigger className='text-left'>
-                  <Button className='w-full flex justify-between'>
+                  <Button className='w-full flex justify-between hover:cursor-pointer'>
                     <div className='inline-flex items-center gap-2'>
                       <Plus className='text-left' />
                       Create
@@ -72,9 +73,16 @@ const AppSidebar = async ({}) => {
 
         <SidebarGroup>
           {loggedInUser ? (
-            <div className='flex items-center gap-2'>
-              <UserButton />
-              <span>{loggedInUser?.firstName}</span>
+            <div className='flex flex-col items-start justify-center gap-2'>
+              <Button className='text-xs' asChild>
+                <Link href='/pricing'>Unlock Unlimiited Access</Link>
+              </Button>
+              <div className='flex items-center gap-1'>
+                <UserButton />
+                <span className='text-xs'>
+                  {substring(loggedInUser?.emailAddresses[0].emailAddress, 19)}
+                </span>
+              </div>
             </div>
           ) : (
             <SignupButtonComponent />

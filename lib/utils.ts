@@ -6,5 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function substring(string, charCount) {
-  return `${string.substring(string, charCount)}...`;
+  return `${
+    string.length > charCount
+      ? `${string.substring(string, charCount)}...`
+      : string
+  }`;
 }

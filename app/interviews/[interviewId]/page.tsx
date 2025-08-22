@@ -56,10 +56,12 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
       <div className='mt-20 mb-20'>
         <Tabs defaultValue='practice-questions'>
           <TabsList className='w-full'>
-            <TabsTrigger value='practice-questions'>
+            <TabsTrigger className='cursor-pointer' value='practice-questions'>
               Practice Questions
             </TabsTrigger>
-            <TabsTrigger value='mock-interview'>Mock Interview</TabsTrigger>
+            <TabsTrigger className='cursor-pointer' value='mock-interview'>
+              Mock Interview
+            </TabsTrigger>
           </TabsList>
           <TabsContent value='practice-questions'>
             <Suspense fallback={<Skeleton className='h-24 w-full' />}>

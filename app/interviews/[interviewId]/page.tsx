@@ -40,6 +40,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
     <div className='max-w-6xl mx-auto p-4 relative'>
       <Link
         href={`/delete-interview/${interviewId}`}
+        scroll={false}
         className='absolute right-0 top-0 text-red-500 cursor-pointer'>
         <Trash2Icon />
       </Link>

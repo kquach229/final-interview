@@ -2,8 +2,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { Button } from './ui/button';
-import { usePathname } from 'next/navigation';
-import { Delete } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 
 const SidebarInterviewSelection = ({ interviews }) => {
   const pathname = usePathname();

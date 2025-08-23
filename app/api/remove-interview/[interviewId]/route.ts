@@ -1,6 +1,5 @@
 import { checkUser } from '@/lib/checkUser';
 import { prisma } from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(
@@ -9,7 +8,7 @@ export async function DELETE(
 ) {
   try {
     const user = await checkUser();
-    const { interviewId } = params;
+    const { interviewId } = await params;
 
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

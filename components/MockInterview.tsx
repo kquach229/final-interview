@@ -12,7 +12,7 @@ import { Room, Track } from 'livekit-client';
 import '@livekit/components-styles';
 import { useEffect, useState } from 'react';
 
-export default function Page({ interviewId }) {
+export default function Page({ interviewId }: { interviewId: string }) {
   // TODO: get user input for room and name
   const room = 'quickstart-room';
   const name = 'quickstart-user';
@@ -38,7 +38,7 @@ export default function Page({ interviewId }) {
         if (!mounted) return;
         if (data.token) {
           await roomInstance.connect(
-            process.env.NEXT_PUBLIC_LIVEKIT_URL,
+            process.env.NEXT_PUBLIC_LIVEKIT_URL!!,
             data.token
           );
         }

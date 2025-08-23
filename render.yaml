@@ -1,0 +1,21 @@
+services:
+  - type: pserv
+    name: agent-example
+    runtime: image
+    image:
+      url: docker.io/kenny335/final-interview:latest
+
+    plan: starter # private services require paid plan
+    region: virginia
+
+    envVars:
+      - fromGroup: final-interview
+
+    maxShutdownDelaySeconds: 300
+
+    scaling:
+      minInstances: 1
+      maxInstances: 4
+      targetCPUPercent: 60
+      targetMemoryPercent: 60
+version: '1'

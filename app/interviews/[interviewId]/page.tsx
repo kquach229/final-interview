@@ -14,14 +14,14 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 
-interface InterviewPageProps {
-  params: { interviewId: string };
-  searchParams: Promise<{ key: string }>;
-}
 export const metadata: Metadata = {
   title: 'Interview',
 };
-export default async function InterviewPage({ params }: InterviewPageProps) {
+export default async function InterviewPage({
+  params,
+}: {
+  params: Promise<{ interviewId: string }>;
+}) {
   const user = await currentUser();
   const { interviewId } = await params;
 

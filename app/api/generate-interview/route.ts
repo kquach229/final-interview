@@ -11,6 +11,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    // ok
+
     const prompt = `You are an AI mock interviewer. Based on the job title "${
       body.title
     }" and job description "${body.jobDescription}", generate ${

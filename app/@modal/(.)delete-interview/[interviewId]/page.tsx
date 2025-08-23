@@ -30,6 +30,8 @@ export default function DeleteModal() {
     }
   };
 
+  // space
+
   return (
     <Modal openModal={openModal} onClose={() => router.back()}>
       <div className='flex flex-col items-center justify-center p-6 text-center'>

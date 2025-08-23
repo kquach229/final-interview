@@ -14,11 +14,7 @@ export function Modal({
 }) {
   const router = useRouter();
   const handleOpenChange = () => {
-    if (onClose) {
-      onClose();
-    } else {
-      router.back();
-    }
+    router.back();
   };
 
   return (

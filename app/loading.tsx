@@ -1,7 +1,11 @@
-import React from 'react';
+import { HashLoader } from 'react-spinners';
 
 export const Loading = () => {
-  return <div className='font-bold text-8xl'>Loading...</div>;
+  return (
+    <div className='flex mx-auto w-full h-screen'>
+      <HashLoader className='text-5xl' />
+    </div>
+  );
 };
 
 export default Loading;

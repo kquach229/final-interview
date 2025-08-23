@@ -172,7 +172,7 @@ export default function RoleForm() {
             )}
           />
 
-          <Button type='submit' disabled={isLoading}>
+          <Button className='cursor-pointer' type='submit' disabled={isLoading}>
             {isLoading
               ? 'Generating Your Interview Prep'
               : 'Generate Mock Interview'}

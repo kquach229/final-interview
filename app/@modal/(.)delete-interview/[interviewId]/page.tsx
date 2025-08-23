@@ -31,7 +31,7 @@ export default function DeleteModal() {
   };
 
   return (
-    <Modal openModal={openModal} onClose={() => setOpenModal(false)}>
+    <Modal openModal={openModal} onClose={() => router.back()}>
       <div className='flex flex-col items-center justify-center p-6 text-center'>
         <div className='flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4'>
           <AlertTriangle className='w-6 h-6 text-red-600' />
@@ -46,7 +46,7 @@ export default function DeleteModal() {
           <Button
             variant='outline'
             className='flex-1'
-            onClick={() => setOpenModal(false)}>
+            onClick={() => router.back()}>
             Cancel
           </Button>
           <Button

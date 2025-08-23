@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  nextjs:
+    image: kenny335/final-interview:latest
+    ports:
+      - '3000:3000'
+    env_file: .env
+    depends_on:
+      - agent
+
+  agent:
+    image: kenny335/final-interview:latest
+    env_file: .env
+    restart: always

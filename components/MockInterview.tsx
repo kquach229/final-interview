@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 export default function Page({ interviewId }: { interviewId: string }) {
   // TODO: get user input for room and name
   const room = 'quickstart-room';
-  const name = 'quickstart-user';
+  const name = 'kenny-quach';
 
   const [roomInstance] = useState(
     () =>

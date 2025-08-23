@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { interviewId: string } }
+  { params }: { params: Promise<{ interviewId: string }> }
 ) {
   try {
     const user = await checkUser();

@@ -4,9 +4,9 @@ import { stripe } from '../../lib/stripe';
 export default async function Success({
   searchParams,
 }: {
-  searchParams: { session_id?: string };
+  searchParams: Promise<{ session_id: string | undefined }>;
 }) {
-  const session_id = searchParams?.session_id;
+  const session_id = (await searchParams)?.session_id;
 
   if (!session_id) {
     throw new Error('Please provide a valid session_id (`cs_test_...`)');

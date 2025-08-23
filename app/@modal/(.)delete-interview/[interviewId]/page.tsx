@@ -36,6 +36,7 @@ export default function DeleteModal() {
         <div className='flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4'>
           <AlertTriangle className='w-6 h-6 text-red-600' />
         </div>
+
         <h2 className='text-xl font-semibold mb-2'>Delete Interview?</h2>
         <p className='text-sm text-muted-foreground mb-6 max-w-sm'>
           This action cannot be undone. This will permanently delete this

@@ -1,8 +1,0 @@
-services:
-  - type: worker
-    name: livekit-agent
-    env: docker
-    plan: starter
-    dockerfilePath: ./Dockerfile
-    envVars:
-      - fromGroup: final-interview

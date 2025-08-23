@@ -2,10 +2,7 @@ import { checkUser } from '@/lib/checkUser';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { interviewId: string } }
-) {
+export async function DELETE({ params }: { params: { interviewId: string } }) {
   try {
     const user = await checkUser();
     const { interviewId } = await params;

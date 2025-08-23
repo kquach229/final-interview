@@ -10,7 +10,7 @@ interface Params {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id: interviewId } = await params;
   const room = req.nextUrl.searchParams.get('room');
@@ -33,7 +33,7 @@ export async function GET(
   }
 
   const interview = await prisma.interview.findUnique({
-    where: { id: params.id },
+    where: { id: interviewId },
   });
 
   if (!interview) {

@@ -5,10 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function substring(string, charCount) {
+export function substring(string: string, charCount: number) {
   return `${
-    string.length > charCount
-      ? `${string.substring(string, charCount)}...`
-      : string
+    string.length > charCount ? `${string.substring(0, charCount)}...` : string
   }`;
 }

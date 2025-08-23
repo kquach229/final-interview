@@ -32,6 +32,8 @@ const formSchema = z.object({
     .optional(),
 });
 
+type FormSchemaType = z.infer<typeof formSchema>;
+
 export default function RoleForm() {
   const router = useRouter();
   const user = useUser();
@@ -48,11 +50,11 @@ export default function RoleForm() {
     },
   });
 
-  async function extractText(file) {
+  async function extractText(file: File) {
     return await pdfToText(file);
   }
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormSchemaType) => {
     setIsloading(true);
     let resumeContent;
     let resumeFileName;

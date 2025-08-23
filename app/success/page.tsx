@@ -12,14 +12,14 @@ export default async function Success({
     throw new Error('Please provide a valid session_id (`cs_test_...`)');
   }
 
-  const {
-    status,
-    customer_details: { email: customerEmail },
-    amount_total,
-    currency,
-  } = await stripe.checkout.sessions.retrieve(session_id, {
+  const session = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ['line_items', 'payment_intent'],
   });
+
+  const status = session.status;
+  const customerEmail = session.customer_details?.email ?? 'your email';
+  const amount_total = session.amount_total;
+  const currency = session.currency;
 
   if (status === 'open') {
     return redirect('/');
@@ -57,10 +57,11 @@ export default async function Success({
             <p className='text-gray-700 font-medium'>
               Amount Paid:{' '}
               <span className='text-green-600'>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: currency.toUpperCase(),
-                }).format(amount_total! / 100)}
+                {amount_total &&
+                  new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: currency?.toUpperCase() ?? 'USD',
+                  }).format(amount_total / 100)}
               </span>
             </p>
           </div>

@@ -1,23 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import { RecordVideo } from './VideoSubmission';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from './ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Label } from './ui/label';
+
+type FormSchemaType = z.infer<typeof formSchema>;
 
 const formSchema = z.object({
   textResponse: z.string().min(5, {
@@ -25,7 +18,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function InputBox({ questionId }) {
+export default function InputBox({ questionId }: { questionId: string }) {
   const [submittingSubmission, setSubmittingSubmission] = useState(false);
   const router = useRouter();
 
@@ -36,7 +29,7 @@ export default function InputBox({ questionId }) {
     },
   });
 
-  const handleSubmitTextSubmission = async (formData) => {
+  const handleSubmitTextSubmission = async (formData: FormSchemaType) => {
     setSubmittingSubmission(true);
 
     const res = await fetch('/api/submission', {

@@ -36,7 +36,7 @@ export function RecordVideo({ questionId }: { questionId: string }) {
         await uploadVideo(file); // upload as soon as recording stops
 
         // Cleanup
-        stream.getTracks().forEach((track) => track.stop());
+        stream?.getTracks().forEach((track) => track.stop());
         setStream(null);
       };
 

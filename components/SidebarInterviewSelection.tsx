@@ -3,8 +3,13 @@ import Link from 'next/link';
 import React from 'react';
 import { Button } from './ui/button';
 import { usePathname, useRouter } from 'next/navigation';
+import type { Interview } from '@prisma/client';
 
-const SidebarInterviewSelection = ({ interviews }) => {
+const SidebarInterviewSelection = ({
+  interviews,
+}: {
+  interviews: Interview[];
+}) => {
   const pathname = usePathname();
 
   return (

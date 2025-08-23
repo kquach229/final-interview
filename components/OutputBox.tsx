@@ -7,20 +7,25 @@ import { Card, CardContent } from './ui/card';
 import { substring } from '@/lib/utils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export const OutputBox = ({
-  questionId,
-  question,
-}: {
+interface Submission {
+  id: string;
+  questionId: string;
+  videoUrl: string | null;
+  text: string | null;
+  feedback: string | null;
+  createdAt: Date;
+}
+
+interface OutputBoxProps {
   questionId: string;
   question: {
-    text: string;
-    submissions: {
-      id: string;
-      text: string;
-      feedback?: string | null;
-      createdAt: string;
-    }[];
-  };
+    submissions: Submission[];
+  } | null;
+}
+
+export const OutputBox: React.FC<OutputBoxProps> = ({
+  questionId,
+  question,
 }) => {
   const [guidelines, setGuidelines] = useState('');
   const [sampleAnswer, setSampleAnswer] = useState('');
@@ -33,8 +38,9 @@ export const OutputBox = ({
   const submissionId = searchParams.get('submissionId');
 
   const selectedSubmission = useMemo(() => {
-    return question?.submissions?.find((s) => s.id === submissionId);
-  }, [question.submissions, submissionId]);
+    return question?.submissions.find((s) => s.id === submissionId) ?? null;
+    // ✅ safe even if question is null
+  }, [question, submissionId]);
 
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -43,13 +49,13 @@ export const OutputBox = ({
   };
 
   useEffect(() => {
-    if (!submissionId && question.submissions.length > 0) {
+    if (!submissionId && question && question.submissions.length > 0) {
       const defaultId = question.submissions[0].id;
       const params = new URLSearchParams(searchParams.toString());
       params.set('submissionId', defaultId);
       router.replace(`${pathname}?${params.toString()}`);
     }
-  }, [submissionId, question.submissions, searchParams, router, pathname]);
+  }, [submissionId, question, searchParams, router, pathname]);
 
   useEffect(() => {
     const fetchAndGenerate = async () => {
@@ -77,6 +83,8 @@ export const OutputBox = ({
     router.push(`${pathname}?${createQueryString('submissionId', id)}`);
     setSelectedTab('feedback');
   };
+
+  if (!question) return <div>No question found</div>;
 
   return (
     <div className='w-full rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-zinc-900'>
@@ -109,7 +117,7 @@ export const OutputBox = ({
           </TabsContent>
 
           <TabsContent value='submissions'>
-            {question.submissions.length == 0 ? (
+            {question.submissions.length === 0 ? (
               <div className='text-zinc-400 italic text-sm'>
                 No submissions yet.
               </div>
@@ -123,7 +131,7 @@ export const OutputBox = ({
                     <CardContent className='w-full'>
                       <div className='flex items-center justify-between w-full'>
                         <div className='text-sm text-zinc-600 dark:text-zinc-300'>
-                          {substring(submission.text, 50)}
+                          {substring(submission.text || '', 50)}
                         </div>
                         <div className='text-xs text-zinc-500'>
                           {new Date(submission.createdAt).toLocaleDateString()}

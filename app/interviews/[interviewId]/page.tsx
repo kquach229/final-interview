@@ -73,7 +73,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
           </TabsList>
           <TabsContent value='practice-questions'>
             <Suspense fallback={<Skeleton className='h-24 w-full' />}>
-              <PracticeQuestionsList questions={interview?.questions} />
+              <PracticeQuestionsList questions={interview?.questions ?? []} />
             </Suspense>
           </TabsContent>
           <TabsContent value='mock-interview'>

@@ -1,0 +1,23 @@
+apiVersion: livekit/v1
+kind: Agent
+metadata:
+  name: final-interview-agent
+  namespace: default
+spec:
+  subdomain: 'final-interview-2spnsl9h' # matches project.toml exactly
+  image: docker.io/kenny335/final-interview:latest
+  replicas: 1
+  env:
+    - name: LIVEKIT_API_KEY
+      value: 'APIdoiiBiC6QYqq'
+    - name: LIVEKIT_API_SECRET
+      value: 'yVVbVQRrfRaa0euyRGI1EsroTwZrsGLI2fwjdEP5hb8A'
+    - name: LIVEKIT_URL
+      value: 'wss://final-interview-2spnsl9h.livekit.cloud'
+  resources:
+    limits:
+      cpu: '500m'
+      memory: '512Mi'
+    requests:
+      cpu: '250m'
+      memory: '256Mi'

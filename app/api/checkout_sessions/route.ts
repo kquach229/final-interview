@@ -2,12 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { stripe } from '../../../lib/stripe';
 
+interface RequestBody {
+  planName?: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const headersList = headers();
-    const origin = headersList.get('origin') || process.env.NEXT_PUBLIC_APP_URL;
+    const origin =
+      (await headersList).get('origin') || process.env.NEXT_PUBLIC_APP_URL;
 
-    const { planName } = await req.json();
+    const body: RequestBody = await req.json();
+    const { planName } = body;
     if (!planName) {
       return NextResponse.json({ error: 'No plan selected' }, { status: 400 });
     }

@@ -10,7 +10,11 @@ interface DeleteInterviewProps {
   };
 }
 
-const DeleteInterview = async ({ params }: DeleteInterviewProps) => {
+const DeleteInterview = async ({
+  params,
+}: {
+  params: Promise<{ interviewId: string }>;
+}) => {
   const { interviewId } = await params;
 
   const interview = await prisma.interview.findUnique({

@@ -28,27 +28,27 @@ export default function Page({ interviewId }: { interviewId: string }) {
     let mounted = true;
     (async () => {
       try {
-        // Fetch a token for the user
         const resp = await fetch(
           `/api/token?room=${room}&username=${name}&interviewId=${interviewId}`
         );
         const data = await resp.json();
-        if (!mounted || !data.token) return;
+        if (!mounted) return;
 
-        // Connect to the LiveKit room
-        await roomInstance.connect(
-          process.env.NEXT_PUBLIC_LIVEKIT_URL!,
-          data.token
-        );
+        if (data.token) {
+          await roomInstance.connect(
+            process.env.NEXT_PUBLIC_LIVEKIT_URL!,
+            data.token
+          );
 
-        // Automatically publish microphone using createLocalTracks
-        const [audioTrack] = await createLocalTracks({
-          audio: true,
-          video: false,
-        });
-        await roomInstance.localParticipant.publishTrack(audioTrack);
+          // Trigger the agent to join this room
+          await fetch('/api/create-agent-job', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roomName: room, interviewId }),
+          });
+        }
       } catch (e) {
-        console.error('Failed to join room', e);
+        console.error(e);
       }
     })();
 

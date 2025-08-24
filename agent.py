@@ -9,7 +9,7 @@ from livekit.plugins import google
 
 load_dotenv()
 
-API_BASE = os.getenv("NEXT_PUBLIC_API_BASE", "http://localhost:3000")
+API_BASE = os.getenv("NEXT_PUBLIC_API_BASE", "https://final-interview-three.vercel.app/")
 
 
 class Assistant(agents.Agent):
@@ -39,7 +39,7 @@ async def entrypoint(ctx: agents.JobContext):
     Start by greeting the candidate, then ask questions based on the job description.
     Provide feedback after each response.
     """
-    
+
 
     session = AgentSession(
         llm=google.beta.realtime.RealtimeModel(

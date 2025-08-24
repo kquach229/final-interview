@@ -1,20 +1,12 @@
 'use client';
 
-import {
-  ControlBar,
-  GridLayout,
-  ParticipantTile,
-  RoomAudioRenderer,
-  useTracks,
-  RoomContext,
-} from '@livekit/components-react';
-import { Room, createLocalTracks, Track } from 'livekit-client';
-import '@livekit/components-styles';
 import { useEffect, useState } from 'react';
+import { createLocalAudioTrack, Room } from 'livekit-client';
+import { RoomContext, RoomAudioRenderer } from '@livekit/components-react';
 
 export default function Page({ interviewId }: { interviewId: string }) {
-  const room = `interview-${interviewId}`;
-  const name = 'user';
+  const roomName = 'interview-' + interviewId;
+  const username = 'candidate';
 
   const [roomInstance] = useState(
     () =>
@@ -26,29 +18,26 @@ export default function Page({ interviewId }: { interviewId: string }) {
 
   useEffect(() => {
     let mounted = true;
+
     (async () => {
       try {
+        // fetch LiveKit token
         const resp = await fetch(
-          `/api/token?room=${room}&username=${name}&interviewId=${interviewId}`
+          `/api/token?room=${roomName}&username=${username}&interviewId=${interviewId}`
         );
         const data = await resp.json();
-        if (!mounted) return;
+        if (!mounted || !data.token) return;
 
-        if (data.token) {
-          await roomInstance.connect(
-            process.env.NEXT_PUBLIC_LIVEKIT_URL!,
-            data.token
-          );
+        await roomInstance.connect(
+          process.env.NEXT_PUBLIC_LIVEKIT_URL!,
+          data.token
+        );
 
-          // Trigger the agent to join this room
-          await fetch('/api/create-agent-job', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roomName: room, interviewId }),
-          });
-        }
-      } catch (e) {
-        console.error(e);
+        // create local audio track and publish
+        const audioTrack = await createLocalAudioTrack();
+        roomInstance.localParticipant.publishTrack(audioTrack);
+      } catch (err) {
+        console.error('LiveKit connection error:', err);
       }
     })();
 
@@ -56,32 +45,13 @@ export default function Page({ interviewId }: { interviewId: string }) {
       mounted = false;
       roomInstance.disconnect();
     };
-  }, [roomInstance]);
+  }, [roomInstance, interviewId, roomName, username]);
 
   return (
     <RoomContext.Provider value={roomInstance}>
-      <div data-lk-theme='default' style={{ height: '100dvh' }}>
-        <MyVideoConference />
+      <div style={{ height: '100dvh' }}>
         <RoomAudioRenderer />
-        <ControlBar />
       </div>
     </RoomContext.Provider>
-  );
-}
-
-function MyVideoConference() {
-  const tracks = useTracks(
-    [
-      { source: Track.Source.Camera, withPlaceholder: true },
-      { source: Track.Source.ScreenShare, withPlaceholder: false },
-    ],
-    { onlySubscribed: false }
-  );
-  return (
-    <GridLayout
-      tracks={tracks}
-      style={{ height: 'calc(100vh - var(--lk-control-bar-height))' }}>
-      <ParticipantTile />
-    </GridLayout>
   );
 }

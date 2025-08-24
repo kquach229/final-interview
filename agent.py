@@ -3,13 +3,17 @@ import json
 import requests
 from dotenv import load_dotenv
 
+
 from livekit import agents, api
 from livekit.agents import AgentSession, Agent, RoomInputOptions
-from livekit.plugins import google
+from livekit.plugins import google, silero
 
 load_dotenv()
 
-API_BASE = os.getenv("NEXT_PUBLIC_API_BASE", "https://final-interview-three.vercel.app/")
+API_BASE = os.getenv("NEXT_PUBLIC_API_BASE", "http://localhost:3000")
+LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
+LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
+LIVEKIT_URL = os.getenv("LIVEKIT_URL")
 
 
 class Assistant(agents.Agent):
@@ -18,53 +22,57 @@ class Assistant(agents.Agent):
 
 
 async def entrypoint(ctx: agents.JobContext):
+    
     try:
-        metadata_str = json.loads(ctx.job.room.metadata)
-        interviewId = metadata_str["interviewId"]
-        if not interviewId:
-            raise ValueError("interviewId is missing in room metadata")
+        
+      metadata_str = json.loads(ctx.job.room.metadata)
+      interviewId = metadata_str["interviewId"]
+
+      if not interviewId:
+          raise ValueError("interviewId is missing in room metadata")
     except Exception as e:
         raise RuntimeError(f"Failed to parse room metadata: {e}")
 
-    # Fetch interview data from your API
     res = requests.get(f"{API_BASE}/api/get-interview/{interviewId}")
     if res.status_code != 200:
         raise RuntimeError(f"Failed to fetch interview {interviewId}: {res.text}")
     interview = res.json()
 
-    instructions = f"""
+    context_instructions = f"""
     You are a helpful voice AI assistant.
-    Conduct a mock interview for the position "{interview['jobTitle']}" 
+    You are conducting a mock interview for the position "{interview['jobTitle']}"
     at {interview.get('companyName', 'an unspecified company')}.
-    Start by greeting the candidate, then ask questions based on the job description.
-    Provide feedback after each response.
+    Job Description: {interview['jobDescription']}
+    Company Description: {interview.get('companyDescription', 'N/A')}
+    Resume: {interview.get('resume', 'No resume provided')}. 
+    Start by greeting the candidate, and having some small talk with them. 
+    Afterwards, ask them a set of questions related to the position they are interviewing for. 
+    After each response to the question, give the candidate feedback on their response, and how they could work on it to improve. 
+    Oblige to candidate's requests accordingly if they request a change to the interview experience.
     """
-
 
     session = AgentSession(
         llm=google.beta.realtime.RealtimeModel(
             model="gemini-2.0-flash-exp",
             voice="Puck",
             temperature=0.8,
-            instructions=instructions,
+            instructions=context_instructions,
         )
     )
 
-    print(f"[Agent] Starting session in room: {ctx.room.name}")
-    
-    # Auto-start agent session and publish audio
     await session.start(
         room=ctx.room,
-        agent=Assistant(instructions=instructions),
-        room_input_options=RoomInputOptions(
-            publish_audio=True  # Ensures the agent publishes its audio track immediately
-        ),
+        agent=Assistant(instructions=context_instructions),
+        room_input_options=RoomInputOptions(),
     )
 
-    print("[Agent] Audio track published, starting mock interview...")
-    
-    # Start the interview immediately
     await session.generate_reply(
         instructions="Greet the candidate and begin the interview."
     )
-    print("[Agent] Interview started.")
+
+
+if __name__ == "__main__":
+    print("Starting LiveKit agent worker...")
+    agents.cli.run_app(
+        agents.WorkerOptions(entrypoint_fnc=entrypoint)
+    )

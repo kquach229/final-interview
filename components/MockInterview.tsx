@@ -1,43 +1,49 @@
 'use client';
 
+import {
+  ControlBar,
+  GridLayout,
+  ParticipantTile,
+  RoomAudioRenderer,
+  useTracks,
+  RoomContext,
+} from '@livekit/components-react';
+import { Room, Track } from 'livekit-client';
+import '@livekit/components-styles';
 import { useEffect, useState } from 'react';
-import { createLocalAudioTrack, Room } from 'livekit-client';
-import { RoomContext, RoomAudioRenderer } from '@livekit/components-react';
 
 export default function Page({ interviewId }: { interviewId: string }) {
-  const roomName = 'interview-' + interviewId;
-  const username = 'candidate';
+  // TODO: get user input for room and name
+  const room = 'quickstart-room';
+  const name = 'quickstart-user';
 
   const [roomInstance] = useState(
     () =>
       new Room({
+        // Optimize video quality for each participant's screen
         adaptiveStream: true,
+        // Enable automatic audio/video quality optimization
         dynacast: true,
       })
   );
 
   useEffect(() => {
     let mounted = true;
-
     (async () => {
       try {
-        // fetch LiveKit token
         const resp = await fetch(
-          `/api/token?room=${roomName}&username=${username}&interviewId=${interviewId}`
+          `/api/token?room=${room}&username=${name}&interviewId=${interviewId}`
         );
         const data = await resp.json();
-        if (!mounted || !data.token) return;
-
-        await roomInstance.connect(
-          process.env.NEXT_PUBLIC_LIVEKIT_URL!,
-          data.token
-        );
-
-        // create local audio track and publish
-        const audioTrack = await createLocalAudioTrack();
-        roomInstance.localParticipant.publishTrack(audioTrack);
-      } catch (err) {
-        console.error('LiveKit connection error:', err);
+        if (!mounted) return;
+        if (data.token) {
+          await roomInstance.connect(
+            process.env.NEXT_PUBLIC_LIVEKIT_URL!!,
+            data.token
+          );
+        }
+      } catch (e) {
+        console.error(e);
       }
     })();
 
@@ -45,13 +51,39 @@ export default function Page({ interviewId }: { interviewId: string }) {
       mounted = false;
       roomInstance.disconnect();
     };
-  }, [roomInstance, interviewId, roomName, username]);
+  }, [roomInstance]);
 
   return (
     <RoomContext.Provider value={roomInstance}>
-      <div style={{ height: '100dvh' }}>
+      <div data-lk-theme='default' style={{ height: '100dvh' }}>
+        {/* Your custom component with basic video conferencing functionality. */}
+        <MyVideoConference />
+        {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
         <RoomAudioRenderer />
+        {/* Controls for the user to start/stop audio, video, and screen share tracks */}
+        <ControlBar />
       </div>
     </RoomContext.Provider>
+  );
+}
+
+function MyVideoConference() {
+  // `useTracks` returns all camera and screen share tracks. If a user
+  // joins without a published camera track, a placeholder track is returned.
+  const tracks = useTracks(
+    [
+      { source: Track.Source.Camera, withPlaceholder: true },
+      { source: Track.Source.ScreenShare, withPlaceholder: false },
+    ],
+    { onlySubscribed: false }
+  );
+  return (
+    <GridLayout
+      tracks={tracks}
+      style={{ height: 'calc(100vh - var(--lk-control-bar-height))' }}>
+      {/* The GridLayout accepts zero or one child. The child is used
+      as a template to render all passed in tracks. */}
+      <ParticipantTile />
+    </GridLayout>
   );
 }

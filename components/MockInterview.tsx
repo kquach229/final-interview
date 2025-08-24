@@ -8,13 +8,13 @@ import {
   useTracks,
   RoomContext,
 } from '@livekit/components-react';
-import { Room, Track, LocalAudioTrack } from 'livekit-client';
+import { Room, createLocalTracks, Track } from 'livekit-client';
 import '@livekit/components-styles';
 import { useEffect, useState } from 'react';
 
 export default function Page({ interviewId }: { interviewId: string }) {
-  const roomName = 'mock-interview-room';
-  const username = 'user-' + Math.floor(Math.random() * 10000);
+  const room = `interview-${interviewId}`;
+  const name = 'user';
 
   const [roomInstance] = useState(
     () =>
@@ -26,30 +26,29 @@ export default function Page({ interviewId }: { interviewId: string }) {
 
   useEffect(() => {
     let mounted = true;
-
     (async () => {
       try {
-        // Fetch a token from your Next.js API
+        // Fetch a token for the user
         const resp = await fetch(
-          `/api/token?room=${roomName}&username=${username}&interviewId=${interviewId}`
+          `/api/token?room=${room}&username=${name}&interviewId=${interviewId}`
         );
         const data = await resp.json();
         if (!mounted || !data.token) return;
 
-        // Connect to LiveKit room using the token
+        // Connect to the LiveKit room
         await roomInstance.connect(
           process.env.NEXT_PUBLIC_LIVEKIT_URL!,
           data.token
         );
 
-        // Automatically publish mic audio to wake the agent
-        const stream = await navigator.mediaDevices.getUserMedia({
+        // Automatically publish microphone using createLocalTracks
+        const [audioTrack] = await createLocalTracks({
           audio: true,
+          video: false,
         });
-        const audioTrack = new LocalAudioTrack(stream.getAudioTracks()[0]);
         await roomInstance.localParticipant.publishTrack(audioTrack);
       } catch (e) {
-        console.error('Error connecting to LiveKit:', e);
+        console.error('Failed to join room', e);
       }
     })();
 
@@ -57,7 +56,7 @@ export default function Page({ interviewId }: { interviewId: string }) {
       mounted = false;
       roomInstance.disconnect();
     };
-  }, [roomInstance, interviewId]);
+  }, [roomInstance]);
 
   return (
     <RoomContext.Provider value={roomInstance}>
@@ -78,7 +77,6 @@ function MyVideoConference() {
     ],
     { onlySubscribed: false }
   );
-
   return (
     <GridLayout
       tracks={tracks}

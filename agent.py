@@ -10,7 +10,7 @@ from livekit.plugins import google
 
 load_dotenv()
 
-API_BASE = os.getenv("NEXT_PUBLIC_API_BASE", "http://localhost:3000")
+API_BASE = os.getenv("NEXT_PUBLIC_API_BASE", "https://final-interview-three.vercel.app/")
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
 LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
